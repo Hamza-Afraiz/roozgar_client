@@ -1,7 +1,7 @@
 import jwt_decode from "jwt-decode"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Toast from 'react-native-toast-message';
-
+import {useSelector,useDispatch} from 'react-redux'
 
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 
@@ -93,11 +93,11 @@ export const registerUser = (user, dispatch) => {
        alert("incorrect details.Check your details again")
        console.log(err)
     
-        logoutUser(dispatch)
+        
     });
 };
-export const getCategory = ( dispatch) => {
-
+export const getCategory = () => {
+    const dispatch  = useDispatch()
      fetch('http://192.168.0.111:3000/api/v1/category/', {
          method: "GET",
          
@@ -109,10 +109,12 @@ export const getCategory = ( dispatch) => {
      .then((res) => res.json())
      .then((data) => {
          if (data) {
+            dispatch({type:"ADD_DATA",payload:data})
+           
              const categoryNow = data;
              
              storeCategories(categoryNow)
-             console.log("user data is ",data)
+             //console.log("user data is ",data)
          
              //const value=AsyncStorage.getItem('jwt')
             //console.log("token value is ",value)

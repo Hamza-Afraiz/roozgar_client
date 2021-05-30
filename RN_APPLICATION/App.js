@@ -11,10 +11,15 @@ import Auth from "./Context/store/Auth";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Colors } from './Constants/Colors';
-import Services from "./Screens/Services";
+import Service from "./Screens/service";
 import CustomSidebarMenu from './Screens/CustomSideBarMenu';
 import Home from "./Screens/Home";
 import Appoitment from "./Screens/appoitment";
+import {createStore} from 'redux'
+import {Provider} from 'react-redux'
+import {reducer} from './reducers/reducer'
+
+const store  = createStore(reducer)
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -28,7 +33,7 @@ const Drawer = createDrawerNavigator();
 export default function App({navigation,routeName}) {
   
   return (
- 
+    <Provider store={store}>
     <Auth>
     <NavigationContainer>
 
@@ -123,7 +128,7 @@ export default function App({navigation,routeName}) {
     
   </NavigationContainer>
   </Auth>
-
+</Provider>
   );
 }
 const ServicesNavigator = ({navigation}) => {
@@ -138,7 +143,7 @@ const ServicesNavigator = ({navigation}) => {
       <Stack.Screen
       
         name="Services"
-        component={Services}
+        component={Service}
        options={({ navigation }) => ({
                     headerTintColor: 'white',
                     headerStyle: {

@@ -52,7 +52,7 @@ const Signin = (props,{navigation}) => {
 
           <TextInput  
             style={styles.inputText}
-            placeholder="username..." 
+            placeholder="Username..." 
             placeholderTextColor="black"
             onChangeText={text => setuserName(text)}/>
             
@@ -63,6 +63,8 @@ const Signin = (props,{navigation}) => {
             style={styles.inputText}
             placeholder="Password.." 
             placeholderTextColor="black"
+            secureTextEntry={true}
+
             onChangeText={text => setPassword(text)}/>
             
         </View>

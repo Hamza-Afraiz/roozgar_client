@@ -242,13 +242,130 @@ class Wizard extends PureComponent {
   };
 
   _nextStep = () => {
-    if (this.state.index !== this.props.children.length - 1) {
-      this.setState(prevState => ({
-        index: prevState.index + 1,
-       
-      }));
-      console.log(this.state.loading);
+    if(((this.state.index == 0))){
+      if((( this.state.values.firstName) == '' )){
+        Alert.alert("Please First Name .Thankyou");
+      }
+      else{
+        if (this.state.index !== this.props.children.length - 1) {
+          console.log("this vvalue is",this.state.values);
+          this.setState(prevState => ({
+            index: prevState.index + 1,
+           
+          }));
+         
+        }
+      }
     }
+    if(((this.state.index == 1))){
+      if((( this.state.values.lastName) == '' )){
+        Alert.alert("Please Enter Last Name.Thankyou");
+      }
+      else{
+        if (this.state.index !== this.props.children.length - 1) {
+          console.log("this vvalue is",this.state.values);
+          this.setState(prevState => ({
+            index: prevState.index + 1,
+           
+          }));
+         
+        }
+      }
+    }
+    if(((this.state.index == 2))){
+      if((( this.state.values.userName) == '' )){
+        Alert.alert("Please Enter User Name.Thankyou");
+      }
+      else{
+        if (this.state.index !== this.props.children.length - 1) {
+          console.log("this vvalue is",this.state.values);
+          this.setState(prevState => ({
+            index: prevState.index + 1,
+           
+          }));
+         
+        }
+      }
+    }
+    if(((this.state.index == 3))){
+      if(((( this.state.values.password) == '' )) && ( this.state.values.password.length ) <= 7 ){
+        Alert.alert("Please Enter Password.Thankyou");
+      }
+      else{
+        if (this.state.index !== this.props.children.length - 1) {
+          console.log("this vvalue is",this.state.values);
+          this.setState(prevState => ({
+            index: prevState.index + 1,
+           
+          }));
+         
+        }
+      }
+    }
+    if(((this.state.index == 4))){
+      if(((( this.state.values.email) == '' )) ){
+        Alert.alert("Please Enter Email.Thankyou");
+      }
+      else{
+        if (this.state.index !== this.props.children.length - 1) {
+          console.log("this vvalue is",this.state.values);
+          this.setState(prevState => ({
+            index: prevState.index + 1,
+           
+          }));
+         
+        }
+      }
+    }
+    if(((this.state.index == 5))){
+      if(((( this.state.values.phone) == '' )) ){
+        Alert.alert("Please Enter phone.Thankyou");
+      }
+      else{
+        if (this.state.index !== this.props.children.length - 1) {
+          console.log("this vvalue is",this.state.values);
+          this.setState(prevState => ({
+            index: prevState.index + 1,
+           
+          }));
+         
+        }
+      }
+    }
+    if(((this.state.index )== 6)){
+      if(((( this.state.values.phone) == '' )) ){
+        Alert.alert("Please Enter phone.Thankyou");
+      }
+      else{
+        if (this.state.index !== this.props.children.length - 1) {
+          console.log("this vvalue is",this.state.values);
+          this.setState(prevState => ({
+            index: prevState.index + 1,
+           
+          }));
+         
+        }
+      }
+    }
+    if(((this.state.index )>= 6)){
+     
+     
+        if (this.state.index !== this.props.children.length - 1) {
+          console.log("this vvalue is",this.state.values);
+          this.setState(prevState => ({
+            index: prevState.index + 1,
+           
+          }));
+         
+        
+      }
+    }
+   
+    
+   
+   
+   
+    
   };
 
   _prevStep = () => {
@@ -278,7 +395,8 @@ class Wizard extends PureComponent {
   }
   _onSubmit = () => {
     let contextDone=this.context;
-    Alert.alert(JSON.stringify(this.state.values));
+   // Alert.alert(JSON.stringify(this.state.values));
+    if(this.state.values)
     this.storeData(this.state.values)
     console.log(this.state.values)
 

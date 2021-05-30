@@ -11,12 +11,15 @@ import {
   FlatList,
   BackHandler
 } from 'react-native';
+import {useSelector,useDispatch} from 'react-redux'
 import {Colors} from "../Constants/Colors.js";
 import AuthGlobal from "../Context/store/AuthGlobal";
 import { Vendors_list } from "../dummydata/Vendors_list";
 import {getCategory} from "../Context/actions/Auth.actions";
+import {connect} from 'react-redux'
 
-export default class Services extends Component {
+ class Services extends Component {
+ 
 
   constructor(props) {
     super(props);
@@ -42,10 +45,15 @@ export default class Services extends Component {
       "hardwareBackPress",
       this.backAction
     );*/
-
+    getCategory();
+    const someData = this.props.data;
+    console.log("redux data ia",someData)
+  
+   
     let contextDone=this.context;
-    getCategory(contextDone.dispatch);
-    const storage = async()=>{
+    
+   
+   /* const storage = async()=>{
       let jsonValue = await AsyncStorage.getItem('categories');
       
       console.log("categories are ",jsonValue)
@@ -61,7 +69,7 @@ export default class Services extends Component {
 
     }
     storage()
-    
+    */
     }
   componentWillUnmount() {
    // this.backHandler.remove();
@@ -84,6 +92,7 @@ export default class Services extends Component {
       console.log("sorry cant save")
     }
   }
+ 
   render() {
     return (
       <View style={styles.container}>
@@ -116,7 +125,12 @@ export default class Services extends Component {
     );
   }
 }
-
+const mapStateToProps = state => {
+  return {
+      someData: state.someData
+  }
+}
+export default connect(mapStateToProps)(Services)
 const styles = StyleSheet.create({
   container:{
     flex:1,

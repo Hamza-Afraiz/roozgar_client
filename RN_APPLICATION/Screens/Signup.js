@@ -41,6 +41,7 @@ const forms = [
     placeholder: 'Street number HERE...',
     name: 'streetNumber',
   },
+  
   {
     placeholder: 'HOUSE NUMBER HERE...',
     name: 'houseNumber',
@@ -49,6 +50,7 @@ const forms = [
     placeholder: 'Cnic HERE...',
     name: 'cnic',
   },
+ 
 ];
 
 export default class SignUp extends React.Component {
@@ -60,7 +62,15 @@ export default class SignUp extends React.Component {
           initialValues={{
             
             email: '',
-            image:''
+            image:'',
+            userName:'',
+            firstName:'',
+            lastName:'',
+            cnic:'',
+            streetNumber:'',
+            houseNumber:'',
+            phone:' ',
+            password:'',
             
           }}
         >
@@ -73,7 +83,7 @@ export default class SignUp extends React.Component {
                     style={styles.userImage}
                      source={logo}
                    />
-                 
+                 <Text style={styles.cardName}>Please Enter Your {el.name}</Text>
                   <Input
                     onChangeValue={onChangeValue}
                     placeholder={el.placeholder}
@@ -105,5 +115,12 @@ const styles = StyleSheet.create({
     height: 270,
     marginBottom: 15,
     width: 255,
+  },
+  cardName: {
+    color: 'gray',
+      fontSize: 15,
+      fontWeight: '500',
+      marginTop: 5,
+      fontSize: 22,
   },
 });

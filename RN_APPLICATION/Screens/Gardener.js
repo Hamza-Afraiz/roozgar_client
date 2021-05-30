@@ -17,6 +17,7 @@ import {
 import { color } from "react-native-reanimated";
 import { useNavigation } from '@react-navigation/native';
 export default class Gardener extends React.Component {
+ 
   static contextType = AuthGlobal
     constructor(props) {
         super(props);
@@ -43,6 +44,10 @@ export default class Gardener extends React.Component {
       }
     
        storage = async()=>{
+         
+         
+      
+       
         let contextDone=this.context;
         console.log("start")
         let categoryId = await AsyncStorage.getItem('categoryId');
@@ -86,7 +91,7 @@ export default class Gardener extends React.Component {
  
   render() {
     
-  
+ 
  
    
     
