@@ -4,7 +4,7 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import Gardener   from "./Screens/Gardener";
 import  LoadingScreen from "./Screens/LoadingScreen";
 import Profile   from "./Screens/Profile";
-import {  Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import {  Ionicons, AntDesign,FontAwesome5 } from "@expo/vector-icons";
 import  Signin  from "./Screens/Signin";
 import Signup from "./Screens/Signup";
 import Auth from "./Context/store/Auth";
@@ -12,6 +12,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Colors } from './Constants/Colors';
 import Service from "./Screens/service";
+import Logout from './Screens/Logout'
 import CustomSidebarMenu from './Screens/CustomSideBarMenu';
 import Home from "./Screens/Home";
 import Appoitment from "./Screens/appoitment";
@@ -48,6 +49,7 @@ export default function App({navigation,routeName}) {
           
         drawerContent={(props) => <CustomSidebarMenu {...props} />}
        >
+         
         <Drawer.Screen 
         options={{
           drawerIcon: ({focused, size}) => (
@@ -104,6 +106,7 @@ export default function App({navigation,routeName}) {
         <Drawer.Screen  
         options={{
           swipeEnabled: false,
+          drawerLabel: () => null,
         
         }}
         enabled={false}
@@ -119,6 +122,17 @@ export default function App({navigation,routeName}) {
         }
         }
          name="Sign" component={SignNavigator} />
+         <Drawer.Screen 
+        options={{
+          drawerIcon: ({focused, size}) => (
+            <AntDesign
+               name="logout"
+               size={size}
+               color={focused ? '#7cc' : '#ccc'}
+            />
+         ),
+        
+        }}  name="Logout" component={LogoutNavigator} />
         
       
 
@@ -142,7 +156,7 @@ const ServicesNavigator = ({navigation}) => {
     >
       <Stack.Screen
       
-        name="Services"
+        name="Categories"
         component={Service}
        options={({ navigation }) => ({
                     headerTintColor: 'white',
@@ -189,7 +203,7 @@ const ServicesNavigator = ({navigation}) => {
     
       <Stack.Screen
       
-      name="Gardener"
+      name="Services"
       component={Gardener}
      options={({ navigation }) => ({
                   headerTintColor: 'white',
@@ -233,6 +247,38 @@ const ServicesNavigator = ({navigation}) => {
               }
       
     />
+     
+      
+    </Stack.Navigator>
+    
+  )
+
+}
+const LogoutNavigator = ({navigation}) => {
+ 
+  
+  return (
+    
+    <Stack.Navigator mode='modal'
+      initialRouteName={"Logout"}
+      
+    >
+      <Stack.Screen
+      
+        name="Logout"
+        component={Logout}
+       options={({ navigation }) => ({
+                    headerTintColor: 'white',
+                    headerStyle: {
+                        backgroundColor: Colors.secondary
+                    },
+                    
+                  
+                         
+                })
+                }
+        
+      />
      
       
     </Stack.Navigator>

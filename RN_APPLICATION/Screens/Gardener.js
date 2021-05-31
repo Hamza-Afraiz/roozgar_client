@@ -1,6 +1,7 @@
 import React from "react";
 import {Colors} from "../Constants/Colors.js";
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import {connect} from 'react-redux'
 import {
     StyleSheet,
     Text,
@@ -13,10 +14,10 @@ import {
   } from 'react-native';
   import { withNavigationFocus } from "react-navigation";
   import AuthGlobal from "../Context/store/AuthGlobal";
-  import {getService} from "../Context/actions/Auth.actions";
-import { color } from "react-native-reanimated";
+  
+import { color, cond } from "react-native-reanimated";
 import { useNavigation } from '@react-navigation/native';
-export default class Gardener extends React.Component {
+ class Gardener extends React.Component {
  
   static contextType = AuthGlobal
     constructor(props) {
@@ -26,20 +27,29 @@ export default class Gardener extends React.Component {
     per: 9,
     page: 1,
     total_pages: null,
-    id:''
+    categoryIdNew:''
     
   };
     }
     
     
     componentDidMount() {
-    this.storage()
+      let contextDone=this.context;
+      const someData = this.props.someData;
+     // const servicesData=this.props.servicesData;
+      console.log("garrrrdenerrr is",someData);
+      //console.log("services data from redux is",servicesData)
+      this.setState({categoryIdNew:someData})
+      this.getService(someData);
+    //this.storage()
       
      
       
       }
       componentWillUnmount() {
+       
         this.setState({ services : [] });
+       
         
       }
     
@@ -57,7 +67,7 @@ export default class Gardener extends React.Component {
           id:categoryId
         });
         
-        getService(this.state.id,contextDone.dispatch);
+      //  getService(this.state.id);
         let jsonValue = await AsyncStorage.getItem('services');
       
         console.log("services are ",jsonValue)
@@ -85,6 +95,43 @@ export default class Gardener extends React.Component {
   uppercase = word => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   };
+   getService = (id) => {
+    
+          console.log("fetchingggggggggggggg services from ",id)
+         
+    fetch(`http://192.168.0.111:3000/api/v1/service/?id=${id}` ,{
+        method: "GET",
+        
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        if (data) {
+          console.log("when we gett data from databse services are",data)
+          this.setState({
+            services:data
+          })
+            
+           
+            //storeServices(categoryNow)
+            console.log("service data in gardener is ",data)
+        
+            //const value=AsyncStorage.getItem('jwt')
+           //console.log("token value is ",value)
+           
+
+        }
+    })
+    .catch((err) => {
+       alert("incorrect details.Check your details again")
+       console.log(err)
+    
+       
+    });
+};
 
   
 
@@ -140,7 +187,12 @@ export default class Gardener extends React.Component {
     );
   }
 }
-
+const mapStateToProps = state => {
+  return {
+      someData: state.categoryId,
+      //servicesData: state.services
+  }
+}
 
 const styles = StyleSheet.create({
   overall:{
@@ -236,3 +288,4 @@ const styles = StyleSheet.create({
           fontSize:20
       }
   });     
+  export default connect(mapStateToProps)(Gardener)

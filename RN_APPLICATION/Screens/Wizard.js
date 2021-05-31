@@ -139,7 +139,7 @@ function Referal1() {
             registerUser(userData, contextType.dispatch);
             setLoading('0')
 
-            navigation.navigate('Sign');
+            navigation.navigate('Logout');
 
             
            

@@ -39,7 +39,7 @@ class Profile extends Component {
     
     this.onLoad()
     this.onLoadData()
-    this.storage()
+    //this.storage()
     
     }
     componentWillUnmount() {
@@ -198,13 +198,13 @@ class Profile extends Component {
       <View style={styles.headerContainer}>
         <ImageBackground
           style={styles.headerBackgroundImage}
-          blurRadius={2}
-          source={{uri:this.state.vendorData.image}}
+          blurRadius={1}
+          source={{uri:item.image}}
         >
           <View style={styles.headerColumn}>
             <Image
               style={styles.userImage}
-              source={{uri: item.image}}
+              source={{uri: this.state.vendorData.image}}
             />
       
             <View style={styles.userAddressRow}>

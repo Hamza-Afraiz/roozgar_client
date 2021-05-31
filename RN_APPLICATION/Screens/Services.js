@@ -107,7 +107,7 @@ import {connect} from 'react-redux'
           renderItem={({item}) => {
             return (
               <View>
-                <TouchableOpacity style={[styles.card, {backgroundColor:item.color}]} onPress={() => {this.props.navigation.navigate('Gardener'),{categoryId:item.id};this.onSubmit(item.id)}}>
+                <TouchableOpacity style={[styles.card, {backgroundColor:item.color}]} onPress={() => {this.props.navigation.navigate('Services'),{categoryId:item.id};this.onSubmit(item.id)}}>
                   <Image style={styles.cardImage} source={{uri:item.icon}}/>
                 </TouchableOpacity>
 

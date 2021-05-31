@@ -48,11 +48,12 @@ export default class Home extends React.Component {
               <View>
                 <TouchableOpacity style={[styles.card, {backgroundColor:Colors.secondary}]} onPress={() => {
           
-          this.props.navigation.navigate('Services');
+          this.props.navigation.navigate('Categories');
         }}>
                   <Image style={styles.cardImage} source={{uri:item.image}}/>
                 
                 </TouchableOpacity>
+                
 
                 <View style={styles.cardHeader}>
                   <View style={{alignItems:"center", justifyContent:"center"}}>

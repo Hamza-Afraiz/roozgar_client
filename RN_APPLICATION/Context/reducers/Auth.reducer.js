@@ -9,7 +9,13 @@ export default function (state, action) {
             ...state,
             isAuthenticated: !isEmpty(action.payload),
             user: action.payload,
-            userProfile: action.userProfile
+            userProfile: action.userProfile,
+            categoryId:action.categoryId
+        };
+        case SET_CURRENT_CATEGORY: 
+        return {
+            ...state,
+            categoryId:action.payload
         };
         default:
             return state;

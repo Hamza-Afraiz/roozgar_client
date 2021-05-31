@@ -1,6 +1,6 @@
 
 
-import React ,{useState,useEffect}from 'react';
+import React ,{useState,useEffect,useContext}from 'react';
 import {
   
   View,
@@ -18,30 +18,27 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import logo from '../assets/rglogo.png';
+import AuthGlobal from "../Context/store/AuthGlobal";
 const CustomSidebarMenu = (props) => {
-    const [userData,setUserData] = useState({"firstName":"ha,za"})
+    const context = useContext(AuthGlobal);
+    const [userData,setUserData] = useState({"firstName":"sasa"})
     const [profileImage,setProfileImage] = useState('https://besthqwallpapers.com/Uploads/16-3-2020/124945/thumb2-hamza-4k-wallpapers-with-names-horizontal-text-hamza-name.jpg')
     
   useEffect(() => {
     const storage = async()=>{
-     
-      let data = await AsyncStorage.getItem('userData');
+       console.log(context.stateUser.userProfile) ;
+       if(context.stateUser.isAuthenticated){
+        let newdata = context.stateUser.userProfile['user'];
+        setUserData(newdata);
+        console.log("  new data is  ",newdata)
+        setProfileImage(newdata.image)
+       }
       
-      console.log("data is  ",data)
-      
-      let newjsonValue=data != null ? JSON.parse(data) : null;
-      setUserData(newjsonValue)
-      if(newjsonValue.image == ""){
-          newjsonValue.image=profileImage
-      }
-      console.log("userData is ",newjsonValue)
      
-     // console.log(newjsonValue.image)
-      console.log('newjson value is ',newjsonValue)
-      setProfileImage(newjsonValue.image)
+
     }
     storage()
-  }, [props.navigation]);
+  }, [context.stateUser.isAuthenticated]);
    
  
 
@@ -76,16 +73,16 @@ const CustomSidebarMenu = (props) => {
 const styles = StyleSheet.create({
   sideMenuProfileIcon: {
     resizeMode: 'center',
-    width: 150,
+    width: 130,
     height: 160,
-    borderRadius: 100 ,
+    borderRadius: 200 ,
     alignSelf: 'center',
   },
   sideMenuProfileIcon2: {
     resizeMode: 'center',
-    width: 200,
-    height: 200,
-    borderRadius: 100 / 2,
+    width: 150,
+    height: 150,
+    borderRadius: 50,
     alignSelf: 'center',
   },
   iconStyle: {

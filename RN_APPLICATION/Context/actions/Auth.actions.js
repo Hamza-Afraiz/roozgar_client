@@ -7,6 +7,7 @@ export const SET_CURRENT_USER = "SET_CURRENT_USER";
 
 export const loginUser = (user, dispatch) => {
     console.log("username:"+user.userName)
+    const api = process.env.BASE_URL2;
     fetch('http://192.168.0.111:3000/api/v1/client/login', {
         method: "POST",
         body: JSON.stringify(user),
@@ -21,20 +22,23 @@ export const loginUser = (user, dispatch) => {
             const token = data.token;
             const userNow=data.user;
             AsyncStorage.setItem("jwt", token)
-            storeData(userNow)
+            console.log('jwt token saved')
+            //storeData(userNow)
             //const value=AsyncStorage.getItem('jwt')
             //console.log("token value is ",value)
+            
             const decoded = jwt_decode(token)
-            dispatch(setCurrentUser(decoded, user))
+            dispatch(setCurrentUser(decoded, data))
 
         } else {
+            console.log("elseeeeeeeeeee called")
            logoutUser(dispatch)
         }
     })
     .catch((err) => {
        alert("incorrect details")
        console.log(err)
-       alert(err)
+       
         logoutUser(dispatch)
     });
 };
@@ -85,6 +89,7 @@ export const registerUser = (user, dispatch) => {
         
             //const value=AsyncStorage.getItem('jwt')
            //console.log("token value is ",value)
+          // logoutUser(dispatch)
            
 
         }
@@ -126,10 +131,11 @@ export const getCategory = () => {
         alert("incorrect details.Check your details again")
         console.log(err)
      
-         logoutUser(dispatch)
+        
      });
  };
- export const getService = ( id,dispatch) => {
+ export const getService = ( id) => {
+    const dispatch  = useDispatch()
           console.log(id)
           const req=
     fetch(`http://192.168.0.111:3000/api/v1/service/?id=${id}` ,{
@@ -144,8 +150,8 @@ export const getCategory = () => {
     .then((data) => {
         if (data) {
             const categoryNow = data;
-            
-            storeServices(categoryNow)
+            dispatch({type:"ADD_SERVICES",payload:data})
+            //storeServices(categoryNow)
             console.log("service data is ",data)
         
             //const value=AsyncStorage.getItem('jwt')
@@ -158,7 +164,7 @@ export const getCategory = () => {
        alert("incorrect details.Check your details again")
        console.log(err)
     
-        logoutUser(dispatch)
+       
     });
 };
 
@@ -177,6 +183,7 @@ export const getUserProfile = (id) => {
 
 export const logoutUser = (dispatch) => {
     AsyncStorage.removeItem("jwt");
+    console.log("async removeddddddddddd");
     dispatch(setCurrentUser({}))
 }
 
@@ -186,5 +193,13 @@ export const setCurrentUser = (decoded, user) => {
         type: SET_CURRENT_USER,
         payload: decoded,
         userProfile: user
+    }
+}
+export const setCurrentCategory = (categoryId) => {
+    //console.log("user is "+user.getUserProfile);
+    return {
+        type: SET_CURRENT_CATEGORY,
+        payload: categoryId,
+        
     }
 }

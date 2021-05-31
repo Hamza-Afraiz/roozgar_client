@@ -1,6 +1,9 @@
 const initState = {
     data:[],
-    loading:true
+    services:[],
+    userData:{},
+    loading:true,
+    categoryId:'',
 }
 
 export const reducer = (state = initState,action)=>{
@@ -14,6 +17,24 @@ export const reducer = (state = initState,action)=>{
         return {
             ...state,
             loading:action.payload
+        }
+    }
+    if(action.type=="ADD_USER"){
+        return {
+            ...state,
+            loading:action.payload
+        }
+    }
+    if(action.type=="ADD_CATEGORY"){
+        return {
+            ...state,
+            categoryId:action.payload
+        }
+    }
+    if(action.type=="ADD_SERVICES"){
+        return {
+            ...state,
+            services:action.payload
         }
     }
     

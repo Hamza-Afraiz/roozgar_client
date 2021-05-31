@@ -29,6 +29,7 @@ const Signin = (props,{navigation}) => {
   }, [context.stateUser.isAuthenticated,isFocused]);
 
   const handleSubmit = () => {
+    console.log('handle submit')
     const user = {
       userName,
       password,

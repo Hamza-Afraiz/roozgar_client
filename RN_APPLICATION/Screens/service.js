@@ -23,6 +23,11 @@ const Service = () => {
     
     return state.data
 })
+const data2 =  useSelector((state)=>{
+
+    
+    return state.services
+})
 
 
 
@@ -61,7 +66,10 @@ const Service = () => {
         
      });
  };
+  
+
  const onSubmit = (item) =>{
+    dispatch({type:"ADD_CATEGORY",payload:item})
     storeData(item)
    
  };
@@ -77,6 +85,7 @@ const Service = () => {
  useEffect(() => {
      console.log("data 1 is ",data1)
     getCategory(data1)
+  
  
    }, []);
  
@@ -93,7 +102,7 @@ const Service = () => {
           renderItem={({item}) => {
             return (
               <View>
-                <TouchableOpacity style={[styles.card, {backgroundColor:item.color}]} onPress={() => {navigation.navigate('Gardener'),{categoryId:item.id};onSubmit(item.id)}}>
+                <TouchableOpacity style={[styles.card, {backgroundColor:item.color}]} onPress={() => {navigation.navigate('Services'),{categoryId:item.id};onSubmit(item.id)}}>
                   <Image style={styles.cardImage} source={{uri:item.icon}}/>
                 </TouchableOpacity>
 

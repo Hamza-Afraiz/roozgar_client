@@ -6,6 +6,8 @@ import { StyleSheet, Text, View, TextInput ,Image} from 'react-native';
 import Wizard from './Wizard';
 import Input from './Input';
 import logo from '../assets/rglogo.png';
+import {logoutUser} from '../Context/actions/Auth.actions';
+import AuthGlobal from "../Context/store/AuthGlobal";
 const forms = [
    
     {
@@ -54,6 +56,12 @@ const forms = [
 ];
 
 export default class SignUp extends React.Component {
+  static contextType = AuthGlobal
+  componentDidMount() {
+  //  let contextDone=this.context;
+    //logoutUser(contextDone.dispatch)
+
+  }
  
   render() {
     return (

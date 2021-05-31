@@ -39,7 +39,9 @@ class Appoitment extends Component {
       
       }
       componentWillUnmount() {
+
       
+        
       }
     onPressTel = number => {
       const item =this.props.route.params.item;
@@ -61,6 +63,7 @@ class Appoitment extends Component {
      
       
        console.log("fetching data")
+       const api = process.env.BASE_URL2;
       fetch(`http://192.168.0.111:3000/api/v1/orders/` ,{
         method: "GET",
         
