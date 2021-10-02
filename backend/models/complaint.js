@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const acceptedOrderSchema = mongoose.Schema({
+const complaintOrderSchema = mongoose.Schema({
     serviceId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'service',
@@ -21,6 +21,14 @@ vendorName:{
     type:String,
     default:'hamza'
 },
+type:{
+    type:String,
+    default:'lazy'
+},
+description:{
+    type:String,
+    default:'so bad attitude what the hell are u giving to us'
+},
 image:{
     type:String,
     default:'https://images.theconversation.com/files/304957/original/file-20191203-66986-im7o5.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip'
@@ -30,27 +38,27 @@ serviceTitle:{
     default:'car check up'
 }
     ,
-    price:{
-       type:String,
-       default:'300'
-    },
-    completionTime:{
-        type:String,
-        default:'1 hour'
-    },
+   
     dateCreated: {
         type: Date,
         default: Date.now,
     },
+    remarks:{
+        type:String,
+        default:'Actually u r wrong'
+    },status:{
+        type:String,
+        default:'Not Checked'
+    }
 })
 
-acceptedOrderSchema .virtual('id').get(function () {
+complaintOrderSchema .virtual('id').get(function () {
     return this._id.toHexString();
 });
 
-acceptedOrderSchema.set('toJSON', {
+complaintOrderSchema.set('toJSON', {
     virtuals: true,
 });
 
 
-exports.AcceptedOrder = mongoose.model('acceptedOrder', acceptedOrderSchema );
+exports.Complaint = mongoose.model('complaintOrder', complaintOrderSchema );

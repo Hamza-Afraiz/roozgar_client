@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const commentSchema = mongoose.Schema({
+const reviewSchema = mongoose.Schema({
     serviceId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'service',
@@ -18,20 +18,35 @@ const commentSchema = mongoose.Schema({
         ref: 'vendor',
     
     },
-    
+    appoitmentId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ongoingOrder',
+
+    }
+    ,
     description: {
         type: String,
         default:''
     },
+    vendorName: {
+        type: String,
+        default:''
+    },
+    clientName: {
+        type: String,
+        default:'User12345'
+    },
    
     images: [{
-        type: String
+        type: String,
+        default:''
+
     }],
    
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-    
+  
+    rating:{
+        type:Number,
+        default:null
     },
    
    
@@ -42,13 +57,13 @@ const commentSchema = mongoose.Schema({
     },
 })
 
-commentSchema.virtual('id').get(function () {
+reviewSchema.virtual('id').get(function () {
     return this._id.toHexString();
 });
 
-commentSchema.set('toJSON', {
+reviewSchema.set('toJSON', {
     virtuals: true,
 });
 
 
-exports.Comment = mongoose.model('comment', commentSchema);
+exports.Review = mongoose.model('review', reviewSchema);

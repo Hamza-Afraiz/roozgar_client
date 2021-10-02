@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const clientSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: true,
+       // required: true,
     },
     lastName: {
         type: String,
-        required: true,
+        ///required: true,
     },
     userName:{
         type: String,
@@ -45,7 +45,7 @@ const clientSchema = new mongoose.Schema({
    
     image:{
         type:String,
-        default:''
+        default:'https://thumbs.dreamstime.com/b/client-member-icon-splash-natural-blue-round-button-isolated-abstract-illustration-142316739.jpg'
     },
  
 

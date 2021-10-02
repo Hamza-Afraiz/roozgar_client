@@ -1,23 +1,14 @@
 const mongoose = require('mongoose');
 
-const acceptedOrderSchema = mongoose.Schema({
-    serviceId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'service',
-        
-        
-    },
+const upcomingOrderSchema = mongoose.Schema({
+   
     clientId:{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'client',
         
     },
-    vendorId:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'vendor',
-        
-    },
-vendorName:{
+   
+clientName:{
     type:String,
     default:'hamza'
 },
@@ -25,16 +16,24 @@ image:{
     type:String,
     default:'https://images.theconversation.com/files/304957/original/file-20191203-66986-im7o5.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=926&fit=clip'
 },
-serviceTitle:{
+description:{
     type:String,
     default:'car check up'
 }
     ,
-    price:{
+    priceOffered:{
        type:String,
        default:'300'
     },
     completionTime:{
+        type:String,
+        default:'1 hour'
+    },
+    selectedTime:{
+        type:String,
+        default:'1 hour'
+    },
+    selectedDay:{
         type:String,
         default:'1 hour'
     },
@@ -44,13 +43,13 @@ serviceTitle:{
     },
 })
 
-acceptedOrderSchema .virtual('id').get(function () {
+upcomingOrderSchema .virtual('id').get(function () {
     return this._id.toHexString();
 });
 
-acceptedOrderSchema.set('toJSON', {
+upcomingOrderSchema.set('toJSON', {
     virtuals: true,
 });
 
 
-exports.AcceptedOrder = mongoose.model('acceptedOrder', acceptedOrderSchema );
+exports.UpcomingOrder = mongoose.model('upcomingOrder', upcomingOrderSchema );

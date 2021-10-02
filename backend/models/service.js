@@ -40,7 +40,14 @@ const serviceSchema = mongoose.Schema({
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
+        default:''
         
+    },
+    subCategory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubCategory',
+        default:''
+
     },
     availibility: {
         type: String,

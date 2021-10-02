@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const acceptedOrderSchema = mongoose.Schema({
+const ongoingOrderSchema = mongoose.Schema({
     serviceId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'service',
@@ -27,7 +27,7 @@ image:{
 },
 serviceTitle:{
     type:String,
-    default:'car check up'
+    default:'not defined'
 }
     ,
     price:{
@@ -44,13 +44,13 @@ serviceTitle:{
     },
 })
 
-acceptedOrderSchema .virtual('id').get(function () {
+ongoingOrderSchema .virtual('id').get(function () {
     return this._id.toHexString();
 });
 
-acceptedOrderSchema.set('toJSON', {
+ongoingOrderSchema.set('toJSON', {
     virtuals: true,
 });
 
 
-exports.AcceptedOrder = mongoose.model('acceptedOrder', acceptedOrderSchema );
+exports.OngoingOrder = mongoose.model('ongoingOrder', ongoingOrderSchema );
