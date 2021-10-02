@@ -1,22 +1,37 @@
 import React  ,{useContext,useState,useEffect} from 'react';
-import { StyleSheet, Text,Image, View,TextInput,TouchableOpacity } from 'react-native';
+import { StyleSheet, Text,Image, View,TextInput,TouchableOpacity, Alert,Modal,Pressable} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {Colors} from "../Constants/Colors.js";
 import { useIsFocused } from '@react-navigation/native';
 import AuthGlobal from "../Context/store/AuthGlobal";
 import { loginUser } from "../Context/actions/Auth.actions";
 import logo from '../assets/rglogo.png';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { BaseUrl } from "../Constants/baseUrl.js";
+import io from "socket.io-client";
+import messaging from '@react-native-firebase/messaging';
+import { Input } from 'react-native-elements';
+import { flexBasis } from 'styled-system';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 const Signin = (props,{navigation}) => {
   const context = useContext(AuthGlobal);
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
+  const[phoneNumber, setPhoneNumber] = useState("");
   const [error, setError] = useState("");
   const isFocused = useIsFocused();
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const[checkNumber, setCheckNumber] = React.useState("");
+  const[text1,setText1] = React.useState("PLEASE COOPERATE WITH US TO HELP YOU");
 
   useEffect(() => {
+    const socket=io(`http://${BaseUrl.wifi}:3000`);
     console.log("stateusr is ",context.stateUser.userProfile
     )
+   
     console.log("authentication is  ",context.stateUser.isAuthenticated
     )
     Toast.show({
@@ -24,67 +39,347 @@ const Signin = (props,{navigation}) => {
       text2: 'Wellcome Back Dear Client 👋'
     });
     if (context.stateUser.isAuthenticated === true) {
-      props.navigation.navigate("Services");
+      props.navigation.navigate("Home");
     }
+    messaging().onNotificationOpenedApp(remoteMessage => {
+      console.log(
+        'Notification caused app to open from background state in gardener:',
+        remoteMessage.notification,
+      );
+      console.log(remoteMessage.data.vendorToken);
+      if(remoteMessage.data.accepted == "accepted") {
+     
+        
+       
+       props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId,info:'accepted',orderId:remoteMessage.data.orderId})
+     
+      
+         
+      
+    
+     }
+     if(remoteMessage.data.accepted == "completed") {
+     
+        
+       
+      props.navigation.navigate("Receipt",{vendorId:remoteMessage.data.vendorId,info:'completed',orderId:remoteMessage.data.orderId})
+    
+     
+        
+     
+   
+    }
+     if(remoteMessage.data.accepted == "rejected") {
+      // props.navigation.reset({
+      //   index: 0,
+      //   routes: [
+      //     {
+      //       name: 'Categories',
+           
+      //     },
+      //   ],
+      //   params:{
+      //     info:'cancel'
+      //   }
+      // });
+      props.navigation.navigate("Categories",{info:'cancel'})
+           
+       
+     
+      }
+      if(remoteMessage.data.accepted == "arrived") {
+     
+        
+       
+        alert('Your vendor has arrived at your doorstep.Please check or contact vendor')
+       
+          
+       
+     
+      }
+    });
+    
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      console.log("remote msg is",remoteMessage)
+      if(remoteMessage.data.accepted == "accepted") {
+     
+        
+       
+         props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId,info:'accepted',orderId:remoteMessage.data.orderId})
+      
+       
+          
+       
+     
+      }
+      if(remoteMessage.data.accepted == "arrived") {
+     
+        
+       
+       alert('Your vendor has arrived at your doorstep.Please check or contact vendor')
+      
+         
+      
+    
+     }
+      if(remoteMessage.data.accepted == "rejected") {
+        // props.navigation.reset({
+        //   index: 0,
+        //   routes: [
+        //     {
+        //       name: 'Categories',
+             
+        //     },
+        //   ],
+        //   params:{
+        //     info:'cancel'
+        //   }
+        // });
+        props.navigation.navigate("Categories",{info:'cancel'})
+             
+         
+       
+        }
+       if(remoteMessage.data.accepted == "completed") {
+     
+        fetch(`http://${BaseUrl.wifi}:3000/api/v1/acceptedOrder/appoitmentId/?id=${remoteMessage.data.orderId}` ,{
+          method: "GET",
+          
+          headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+          },
+      })
+      .then((res) => res.json())
+      .then((data) => {
+          if (data) {
+             
+              const item=data;
+              console.log("appoitment  data in signinnnnnnnnnnnnnnnnnnn is ",item)
+              props.navigation.navigate("Receipt",{item:item})
+
+             
+             // this.getCurrentLocation();
+    
+          
+              //const value=AsyncStorage.getItem('jwt')
+             //console.log("token value is ",value)
+             
+    
+          }
+      })
+      .catch((err) => {
+         alert("incorrect details.Check your details again")
+         console.log(err)
+      
+          
+      });
+          
+        
+       
+    }
+      
+       
+     /* Alert.alert("A new request has arrived!", "What to do?", [
+        {
+          text: "Reject",
+          onPress: () => {props.navigation.navigate("Categories")},
+          style: "cancel",
+        },
+        {
+          text: "Accept",
+          onPress: () => {props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId});},
+        },
+      ]);*/
+    });
+    return unsubscribe;
   }, [context.stateUser.isAuthenticated,isFocused]);
 
   const handleSubmit = () => {
     console.log('handle submit')
     const user = {
-      userName,
+      phoneNumber,
       password,
     };
      console.log("user type is ",user)
-    if (userName === "" || password === "") {
+    if (phoneNumber === "" || password === "") {
       setError("Please fill in your credentials");
     } else {
       loginUser(user, context.dispatch);
     }
   };
+  const handleForget=() => {
+    const user={
+      checkNumber
+    }
+    fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/checkPhoneNumber`, {
+        method: "POST",
+        body: JSON.stringify(user),
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+    })
+    .then((res) => res.json())
+    .then((data) => {
+        if (data) {
+          console.log("user data is ",data)
+          console.log("phone number exist")
+          props.navigation.navigate('ForgetOtp',{item:checkNumber,id:data.id})
+          setModalVisible(!modalVisible)
+          
+           
+
+        } 
+       
+    })
+    .catch((err) => {
+      console.log("phone number not exist")
+      setText1("PHONE NUMBER NOT FOUND !")
+      
+      console.log(err)
+       
+       
+    });
+  }
     return (
-      <View style={styles.container}>
+      <View style={[styles.container,{}]}>
+        <View >
         <Image
              style={styles.userImage}
               source={logo}
             />
+        </View>
+       
         
         <Toast ref={(ref) => Toast.setRef(ref)} />
-        <View style={styles.inputView} >
+       
+        
+        <View style={{backgroundColor:Colors.bigcard,elevation:2,margin:5,width:'95%',display:'flex',flexDirection:'row',borderRadius:10}} >
+        <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+          <View style={{backgroundColor:Colors.bigcard,elevation:2,width:'90%',display:'flex',flexDirection:'row',borderRadius:10}} >
+       
+        <View style={[styles.inputView,{backgroundColor:Colors.smallcard,elevation:2,width:'95%'}]} >
+        
+        <TextInput  
+          style={styles.inputText}
+          placeholder="Enter PhoneNumber To Reset" 
+          placeholderTextColor="black"
+          onChangeText={text => setCheckNumber(text)}
+          maxLength={11}
+          keyboardType={'numeric'}
+          //maxLength={11}
+          
+         // secureTextEntry={true}
+          />
+         
 
-          <TextInput  
-            style={styles.inputText}
-            placeholder="Username..." 
-            placeholderTextColor="black"
-            onChangeText={text => setuserName(text)}/>
-            
+      </View>
+       
+      
         </View>
-        <View style={styles.inputView} >
-           
-          <TextInput  
-            style={styles.inputText}
-            placeholder="Password.." 
-            placeholderTextColor="black"
-            secureTextEntry={true}
+        <Text style={{marginTop:20}}>
+          {text1}
+          </Text>
+    
+            <Pressable
+              style={[styles.button, styles.buttonClose,{marginTop:"10%"}]}
+              onPress={handleForget}
+            >
+              <Text style={styles.textStyle}>Send Code</Text>
+            </Pressable>
+            <Pressable
+              style={[styles.button,{marginTop:hp(1),marginTop:"10%"}]}
+              onPress={() => setModalVisible(!modalVisible)}
+            >
+              <Text style={styles.textStyle}>Cancel</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+      
+        <Icon style={styles.searchIcon} name="phone" size={30} color={Colors.secondary}/>
+        <View style={[styles.inputView,{backgroundColor:Colors.smallcard,elevation:2,}]} >
+        
+        <TextInput  
+          style={styles.inputText}
+          placeholder="Phone Number..." 
+          placeholderTextColor="black"
+          onChangeText={text => setPhoneNumber(text)}
+          keyboardType={'numeric'}
+          
+          />
+         
 
-            onChangeText={text => setPassword(text)}/>
-            
+      </View>
         </View>
+      
+      
+      
+        
+        <View style={{backgroundColor:Colors.bigcard,elevation:2,width:'95%',display:'flex',flexDirection:'row',borderRadius:10}} >
+        <Icon style={styles.searchIcon} name="key" size={30} color={Colors.secondary}/>
+        <View style={[styles.inputView,{backgroundColor:Colors.smallcard,elevation:2,width:"79%"}]} >
+        
+        <TextInput  
+          style={styles.inputText}
+          placeholder="Password" 
+          placeholderTextColor="black"
+          onChangeText={text => setPassword(text)}
+          secureTextEntry={true}
+          />
+         
+
+      </View>
+       
+      
+        </View>
+
+        
         <TouchableOpacity>
           <Text style={styles.forgot}>Forgot Password?</Text>
         </TouchableOpacity>
       
-        <TouchableOpacity style={styles.loginBtn}
+        <TouchableOpacity style={[styles.loginBtn,{elevation:10}]}
          onPress={handleSubmit}
         >
           <Text style={styles.loginText}>LOGIN</Text>
          
         </TouchableOpacity >
         <TouchableOpacity
-         onPress={()=> props.navigation.navigate('Signup')}
+         onPress={()=> props.navigation.navigate('SignUp3')}
          >
           <Text style={styles.loginText}>Signup</Text>
 
         </TouchableOpacity>
+        <TouchableOpacity
+        style={{marginTop:"7%"}}
+        onPress={() => setModalVisible(!modalVisible)}
+         >
+          <Text style={styles.loginText}>Forget Password?</Text>
+
+        </TouchableOpacity>
+        <View style={{width:'45%',display:"flex",justifyContent:'space-around',flexDirection:"row",marginTop:30,margin:10,backgroundColor:'white',borderRadius:10,elevation:1}}>
+          <Icon name='facebook'
+                              color={Colors.secondary} size={35} />
+                              <Icon name='linkedin'
+                              color={Colors.secondary}
+                              size={35} />
+                            
+          </View>
+      
+ 
+
       </View>
     );
   }
@@ -106,17 +401,23 @@ const styles = StyleSheet.create({
       },
       inputView:{
         width:"80%",
+
+
+
         backgroundColor:Colors.input,
         borderRadius:25,
-        height:50,
-        marginBottom:20,
+        height:45,
+        margin:10,
+        
         justifyContent:"center",
-        padding:20
+        padding:10
       },
       inputText:{
         height:50,
-        color:"white",
-        marginBottom:20
+        color:"black",
+        marginBottom:0,
+        textAlignVertical:'center',
+        //backgroundColor:"grey"
       },
       forgot:{
         color:"white",
@@ -129,17 +430,69 @@ const styles = StyleSheet.create({
         height:50,
         alignItems:"center",
         justifyContent:"center",
-        marginTop:40,
+        marginTop:30,
         marginBottom:10
       },
       userImage: {
         borderColor: '#FFF',
         borderRadius: 0,
         borderWidth: 3,
-        height: 270,
+        height: 200,
         marginBottom: 15,
         width: 255,
       },
+      searchSection: {
+        
+       
+        backgroundColor: '#fff',
+    },
+    searchIcon: {
+        padding: 15,
+    },
+    input2: {
+      flex: 1,
+      paddingTop: 10,
+      paddingRight: 10,
+      paddingBottom: 10,
+      paddingLeft: 0,
+      backgroundColor: '#fff',
+      color: '#424242',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22,
+   
+
+    
+  },
+  modalView: {
+    width:wp(95),
+    height:hp(40),
+    elevation:10,
+
+    backgroundColor: Colors.bigcard,
+    borderColor: Colors.secondary,
+    borderWidth:4,
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    
+  },
+  textStyle: {
+    color: Colors.secondary,
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  
 
 
 });

@@ -4,6 +4,7 @@ import {  Ionicons, FontAwesome5,MaterialIcons,AntDesign} from "@expo/vector-ico
 import logo from '../assets/logoroozgaar.png';
 import {Colors} from "../Constants/Colors.js";
 import LinearGradient from 'react-native-linear-gradient';
+import { Divider } from 'react-native-elements';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import {
   FlatList,
@@ -21,11 +22,14 @@ export const CardHome = ({title, info, noHeader, noFooter, book}) => {
     return (
       <View style={styles.cardContainer}>
         {!noHeader && (
+          
           <View style={styles.cardHeaderContaner}>
+            
             <Text style={styles.cardHeading}>{title}</Text>
             <Text style={styles.cardMore}>See All</Text>
           </View>
         )}
+        <Divider orientation="vertical" width={5} />
         <View style={styles.cardBody}>
           <View style={styles.cardBodyTop}>
             <Image
@@ -35,10 +39,12 @@ export const CardHome = ({title, info, noHeader, noFooter, book}) => {
                   info.image,
               }}
             />
-            <View style={styles.cardLeftSide}>
+            <View style={[styles.cardLeftSide,{elevation:15,backgroundColor:Colors.bigcard,padding:5,borderRadius:10,marginLeft:8}]}>
               <Text style={styles.tag}>Hurry up Now!</Text>
               <Text style={styles.cardAddress}>{info.vendorName}</Text>
+              <Divider orientation="vertical" width={5} />
               <Text style={styles.cardName}>{info.title}</Text>
+              <Divider orientation="vertical" width={5} />
               <Text style={styles.cardTime}>{info.description}</Text>
               <Text style={styles.cardAddress}>{info.availibility}</Text>
               <Text style={styles.cardAddress}>RS {" ",info.price}</Text>
@@ -71,12 +77,12 @@ export const CardHome = ({title, info, noHeader, noFooter, book}) => {
           {!noFooter && (
             <View style={styles.cardBodyBottom}>
               <View style={styles.cardGroupIcon}>
-                <AntDesign name="checkcircleo" size={32} />
+                <AntDesign name="checkcircleo" size={25} />
                 <Text style={styles.cardBottomTitle}>Appoint Now</Text>
               </View>
               <View style={styles.cardGroupIcon}>
-                <AntDesign name="closecircleo" size={32} />
-                <Text style={styles.cardBottomTitle}>Cancle</Text>
+                <AntDesign name="closecircleo" size={25} />
+                <Text style={styles.cardBottomTitle}>Cancel</Text>
               </View>
              
              

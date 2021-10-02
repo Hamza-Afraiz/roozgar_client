@@ -21,7 +21,7 @@ import logo from '../assets/rglogo.png';
 import AuthGlobal from "../Context/store/AuthGlobal";
 const CustomSidebarMenu = (props) => {
     const context = useContext(AuthGlobal);
-    const [userData,setUserData] = useState({"firstName":"sasa"})
+    const [userData,setUserData] = useState({"firstName":"Ali"})
     const [profileImage,setProfileImage] = useState('https://besthqwallpapers.com/Uploads/16-3-2020/124945/thumb2-hamza-4k-wallpapers-with-names-horizontal-text-hamza-name.jpg')
     
   useEffect(() => {
@@ -43,16 +43,19 @@ const CustomSidebarMenu = (props) => {
  
 
   return (
-    <View style={{ paddingTop:80,flex: 1 }}>
+    <View style={{ paddingTop:20,padding:1,flex: 1 }}>
       {/*Top Large Image */}
+      <View style={{ display:'flex',flexDirection:'column'}}>
       <Image
       
-        source={{uri:profileImage }}
-        style={styles.sideMenuProfileIcon}
-      />
-       <Text style={{ fontSize: 22, textAlign: 'center', color: '#37B44E' }}>
-        {userData.firstName}
-      </Text>
+      source={{uri:profileImage }}
+      style={styles.sideMenuProfileIcon}
+    />
+     <Text style={{ fontSize: 22, textAlign: 'center', color: '#37B44E' ,alignSelf:'center',marginLeft:10}}>
+      {userData.userName}
+    </Text>
+      </View>
+     
 
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
@@ -73,10 +76,11 @@ const CustomSidebarMenu = (props) => {
 const styles = StyleSheet.create({
   sideMenuProfileIcon: {
     resizeMode: 'center',
-    width: 130,
-    height: 160,
+    width: 80,
+    height: 80,
     borderRadius: 200 ,
     alignSelf: 'center',
+    
   },
   sideMenuProfileIcon2: {
     resizeMode: 'center',

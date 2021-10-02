@@ -2,13 +2,13 @@ import jwt_decode from "jwt-decode"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import Toast from 'react-native-toast-message';
 import {useSelector,useDispatch} from 'react-redux'
-
+import { BaseUrl } from "../../Constants/baseUrl.js";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
 
 export const loginUser = (user, dispatch) => {
     console.log("username:"+user.userName)
     const api = process.env.BASE_URL2;
-    fetch('http://192.168.0.111:3000/api/v1/client/login', {
+    fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/login`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
@@ -23,7 +23,7 @@ export const loginUser = (user, dispatch) => {
             const userNow=data.user;
             AsyncStorage.setItem("jwt", token)
             console.log('jwt token saved')
-            //storeData(userNow)
+            storeData(userNow)
             //const value=AsyncStorage.getItem('jwt')
             //console.log("token value is ",value)
             
@@ -71,7 +71,7 @@ const storeData = async (value) => {
   }
 export const registerUser = (user, dispatch) => {
    console.log("username:"+user)
-    fetch('http://192.168.0.111:3000/api/v1/client/register', {
+    fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/register`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
@@ -95,7 +95,7 @@ export const registerUser = (user, dispatch) => {
         }
     })
     .catch((err) => {
-       alert("incorrect details.Check your details again")
+       alert("incorrect details fro signin.Check your details again")
        console.log(err)
     
         
@@ -103,7 +103,7 @@ export const registerUser = (user, dispatch) => {
 };
 export const getCategory = () => {
     const dispatch  = useDispatch()
-     fetch('http://192.168.0.111:3000/api/v1/category/', {
+     fetch(`http://${BaseUrl.wifi}:3000/api/v1/category/`, {
          method: "GET",
          
          headers: {
@@ -138,7 +138,7 @@ export const getCategory = () => {
     const dispatch  = useDispatch()
           console.log(id)
           const req=
-    fetch(`http://192.168.0.111:3000/api/v1/service/?id=${id}` ,{
+    fetch(`http://${BaseUrl.wifi}:3000/api/v1/service/?id=${id}` ,{
         method: "GET",
         
         headers: {

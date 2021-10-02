@@ -29,10 +29,13 @@ const Logout = (props,{navigation}) => {
         index: 0,
         routes: [
           {
-            name: 'Sign',
+            name: 'Services',
            
           },
         ],
+        params:{
+          
+        }
       });
     }
   }, [context.stateUser.isAuthenticated]);

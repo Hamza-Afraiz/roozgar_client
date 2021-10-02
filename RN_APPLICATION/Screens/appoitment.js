@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
+
 import { Card, Icon } from 'react-native-elements'
 import {  Ionicons, FontAwesome5,MaterialIcons,AntDesign} from "@expo/vector-icons";
 import logo from '../assets/logoroozgaar.png';
 import {Colors} from "../Constants/Colors.js";
 import LinearGradient from 'react-native-linear-gradient';
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useNavigation } from '@react-navigation/native';
+import { BaseUrl } from "../Constants/baseUrl.js";
 import {
   FlatList,
   Image,
@@ -64,7 +67,7 @@ class Appoitment extends Component {
       
        console.log("fetching data")
        const api = process.env.BASE_URL2;
-      fetch(`http://192.168.0.111:3000/api/v1/orders/` ,{
+      fetch(`http://${BaseUrl.wifi}:3000/api/v1/orders/` ,{
         method: "GET",
         
         headers: {
@@ -116,12 +119,16 @@ class Appoitment extends Component {
           }}
           renderItem={({item}) => {
             return (
-              <View>
+<TouchableOpacity
+onPress={()=>{this.props.navigation.navigate('map')}}>
+<View>
                  <CardHome
           title="Specialist in your area"
           info={item}
         />
               </View>
+</TouchableOpacity>
+             
             )
           }}/>
       </View>

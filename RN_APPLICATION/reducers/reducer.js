@@ -4,6 +4,7 @@ const initState = {
     userData:{},
     loading:true,
     categoryId:'',
+    complainData:{}
 }
 
 export const reducer = (state = initState,action)=>{
@@ -35,6 +36,12 @@ export const reducer = (state = initState,action)=>{
         return {
             ...state,
             services:action.payload
+        }
+    }
+    if(action.type=="ADD_COMPLAINDATA"){
+        return {
+            ...state,
+            complainData:action.payload
         }
     }
     

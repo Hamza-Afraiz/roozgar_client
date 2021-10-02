@@ -24,7 +24,21 @@ export default class Home extends React.Component {
     return word.charAt(0).toUpperCase() + word.slice(1);
   };
 
-  
+navigationMethod =(item)=>{
+  if(item.id == 1){
+    this.props.navigation.navigate('Categories');
+  }
+  if(item.id == 3){
+    this.props.navigation.navigate('APPOITMENTS');
+  }
+  if(item.id == 4){
+    this.props.navigation.navigate('GetComplaints');
+  }
+  if(item.id == 5){
+    this.props.navigation.navigate('My Profile');
+  }
+
+}
 
   componentDidMount() {
     
@@ -48,7 +62,7 @@ export default class Home extends React.Component {
               <View>
                 <TouchableOpacity style={[styles.card, {backgroundColor:Colors.secondary}]} onPress={() => {
           
-          this.props.navigation.navigate('Categories');
+         (this.navigationMethod(item));
         }}>
                   <Image style={styles.cardImage} source={{uri:item.image}}/>
                 
