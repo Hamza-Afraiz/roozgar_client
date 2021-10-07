@@ -280,7 +280,7 @@ const setHomeVisits = () =>{
                         <View style={{width:'50%',display:'flex',flexDirection: 'row',height:'70%',alignSelf:'flex-end',marginBottom:'4%',marginLeft:'2%',}}> 
                             
                         <Image
-                     source={{uri: item.image}}
+                     source={{uri: "https://besthqwallpapers.com/Uploads/16-3-2020/124945/thumb2-hamza-4k-wallpapers-with-names-horizontal-text-hamza-name.jpg"}}
                   style={{
                     alignSelf: 'flex-start',
                     

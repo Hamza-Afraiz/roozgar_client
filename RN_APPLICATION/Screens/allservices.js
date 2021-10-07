@@ -268,17 +268,7 @@ const users = [
           <Text style={[styles.textname,{fontSize:15,color:'red',maxHeight:'20%',minHeight:'15%'}]}> Rs {u.price}</Text>
           <Divider orientation="vertical" width={5} />
           <View style={[styles.usercard,{justifyContent:'center',margin:10}]}>
-            <TouchableOpacity>
-            <Button
-            buttonStyle={{backgroundColor:'#FAF9F6'}}
-            title="Book Now"
-            titleStyle={{color:Colors.secondary}}
-            onPress={() => {
-          
-              this.props.navigation.navigate('Profile',{item:u,vendorId:u.vendorId} );
-            }}
-           />
-            </TouchableOpacity>
+           
         
                          
                            

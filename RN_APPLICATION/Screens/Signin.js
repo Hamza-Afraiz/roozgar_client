@@ -12,11 +12,13 @@ import io from "socket.io-client";
 import messaging from '@react-native-firebase/messaging';
 import { Input } from 'react-native-elements';
 import { flexBasis } from 'styled-system';
+import {useSelector,useDispatch} from 'react-redux'
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 const Signin = (props,{navigation}) => {
+  const dispatch  = useDispatch();
   const context = useContext(AuthGlobal);
   const [userName, setuserName] = useState("");
   const [password, setPassword] = useState("");
@@ -26,7 +28,16 @@ const Signin = (props,{navigation}) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const[checkNumber, setCheckNumber] = React.useState("");
   const[text1,setText1] = React.useState("PLEASE COOPERATE WITH US TO HELP YOU");
+  const setArrived=()=>{
+    
+    dispatch({type:"ADD_ARRIVEDDATA",payload:"arrived"})
+}
+   const data3 =  useSelector((state)=>{
+     console.log("workking nowww")
 
+  
+    return state.intervalData
+  })
   useEffect(() => {
     const socket=io(`http://${BaseUrl.wifi}:3000`);
     console.log("stateusr is ",context.stateUser.userProfile
@@ -51,52 +62,79 @@ const Signin = (props,{navigation}) => {
      
         
        
-       props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId,info:'accepted',orderId:remoteMessage.data.orderId})
+        props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId,info:'accepted',orderId:remoteMessage.data.orderId})
      
       
          
       
     
      }
-     if(remoteMessage.data.accepted == "completed") {
-     
-        
-       
-      props.navigation.navigate("Receipt",{vendorId:remoteMessage.data.vendorId,info:'completed',orderId:remoteMessage.data.orderId})
+     if(remoteMessage.data.accepted == "arrived") {
     
+       
+      setArrived()
+      alert('Your vendor has arrived at your doorstep.Please check or contact vendor')
      
         
      
    
     }
      if(remoteMessage.data.accepted == "rejected") {
-      // props.navigation.reset({
-      //   index: 0,
-      //   routes: [
-      //     {
-      //       name: 'Categories',
-           
-      //     },
-      //   ],
-      //   params:{
-      //     info:'cancel'
-      //   }
-      // });
-      props.navigation.navigate("Categories",{info:'cancel'})
-           
-       
-     
-      }
-      if(remoteMessage.data.accepted == "arrived") {
-     
+       // props.navigation.reset({
+       //   index: 0,
+       //   routes: [
+       //     {
+       //       name: 'Categories',
+            
+       //     },
+       //   ],
+       //   params:{
+       //     info:'cancel'
+       //   }
+       // });
+       props.navigation.navigate("Categories",{info:'cancel'})
+            
         
-       
-        alert('Your vendor has arrived at your doorstep.Please check or contact vendor')
-       
-          
-       
+      
+       }
+      if(remoteMessage.data.accepted == "completed") {
+    
+       fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/getReceipt/?id=${remoteMessage.data.receiptId}` ,{
+         method: "GET",
+         
+         headers: {
+             Accept: "application/json",
+             "Content-Type": "application/json",
+         },
+     })
+     .then((res) => res.json())
+     .then((data) => {
+         if (data) {
+            
+             const item=data;
+             console.log("receipt id  data in signinnnnnnnnnnnnnnnnnnn is ",item)
+             props.navigation.navigate("Receipt",{item:item})
+
+            
+            // this.getCurrentLocation();
+   
+         
+             //const value=AsyncStorage.getItem('jwt')
+            //console.log("token value is ",value)
+            
+   
+         }
+     })
+     .catch((err) => {
+        alert("incorrect details.Check your details again")
+        console.log(err)
      
-      }
+         
+     });
+         
+       
+      
+   }
     });
     
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
@@ -115,7 +153,7 @@ const Signin = (props,{navigation}) => {
       if(remoteMessage.data.accepted == "arrived") {
      
         
-       
+       setArrived()
        alert('Your vendor has arrived at your doorstep.Please check or contact vendor')
       
          
@@ -142,7 +180,7 @@ const Signin = (props,{navigation}) => {
         }
        if(remoteMessage.data.accepted == "completed") {
      
-        fetch(`http://${BaseUrl.wifi}:3000/api/v1/acceptedOrder/appoitmentId/?id=${remoteMessage.data.orderId}` ,{
+        fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/getReceipt/?id=${remoteMessage.data.receiptId}` ,{
           method: "GET",
           
           headers: {
@@ -155,7 +193,7 @@ const Signin = (props,{navigation}) => {
           if (data) {
              
               const item=data;
-              console.log("appoitment  data in signinnnnnnnnnnnnnnnnnnn is ",item)
+              console.log("receipt id  data in signinnnnnnnnnnnnnnnnnnn is ",item)
               props.navigation.navigate("Receipt",{item:item})
 
              

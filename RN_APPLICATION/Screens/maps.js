@@ -11,6 +11,8 @@ import {Colors} from "../Constants/Colors.js";
 import { useIsFocused } from '@react-navigation/native';
 import MapViewDirections from 'react-native-maps-directions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import {useSelector,useDispatch} from 'react-redux'
+import { BackHandler } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -36,6 +38,7 @@ function Maps  ({navigation,route}) {
 const [superLat, setSuperLat] = React.useState(55.9754);
   const [superLong, setSuperLong] = React.useState(21.4735);
 const[clientId,setClientId] =React.useState('60b3b80d9a52a4223c4eb2eb');
+const[appoitmentData,setAppoitmentData]=React.useState({})
 const[token,setToken] =React.useState('');
 const[vendorToken,setVendorToken] =React.useState('')
 const isFocused = useIsFocused();
@@ -45,11 +48,27 @@ const [value,setValue]=React.useState('0');
 const [value2,setValue2]=React.useState('0');
 const[condition,setCondition]=React.useState('0')
 const[subCategory,setSubCategory]=React.useState('');
-
-
+// let componentMounted = true;
+const dispatch  = useDispatch();
+let isMounted = true; 
     React.useEffect(() => {
+     
+      if (isMounted)  {
+        
+       
+      navigation.setOptions({
+        headerLeft: () => (
+            <TouchableOpacity                
+            onPress={() =>navigation.replace('Home')}
+        >
+         <Ionicons style = {{paddingLeft : 10,marginTop:5}} name="arrow-back" size={26} color="white" />
+        </TouchableOpacity>
+
+        ),
+    });
       
      // setInterval(getCurrentLocation, 30000);
+    //  if (componentMounted){
      const {id}=route.params;
      console.log("id in maps ",id);
      setSubCategory(id);
@@ -89,7 +108,8 @@ const[subCategory,setSubCategory]=React.useState('');
     
    // console.log("get cururrrrrrrent location ",)
    
-    
+  //  const intervalId=setInterval(getCurrentLocation, 15000);
+  //  dispatch({type:"ADD_INTERVALDATA",payload:intervalId})
       
        // setClientId(newdata);
      
@@ -101,9 +121,17 @@ const[subCategory,setSubCategory]=React.useState('');
          // console.log("calling filtering")
          // filterVendors();
        // }
-      
-        
-    }, [superLat,superLong,isFocused]);
+    //  }}
+    //  const backHandler = BackHandler.addEventListener(
+    //   "hardwareBackPress",
+    //   () => true
+    // );
+    // return () => backHandler.remove();
+      }
+      return () => { 
+        console.log("returninggg")
+        isMounted = false };
+    }, [superLat,superLong]);
     const requestLocationPermission = async () => {
       try {
         const granted = await PermissionsAndroid.request(
@@ -254,6 +282,7 @@ array2.push(vendorsData[i])
         
           
             console.log("orders data is ",data)
+            setAppoitmentData(data);
         
             //const value=AsyncStorage.getItem('jwt')
            //console.log("token value is ",value)
@@ -269,39 +298,95 @@ array2.push(vendorsData[i])
     });
     
      }
-     const onCancel = ()=>{
-      const vendorIdd="614dc46172d1330f6804416c"
-      fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/delete/?id=${vendorIdd}` ,{
-        method: "DELETE",
+     const deleteOngoing=() => {
+      const { orderId , vendorId } = route.params;
+      const cToken=token;
+      const vToken=vendorToken;
+      
+      const user={
         
-        headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-        },
-    })
-    .then((res) => res.json())
-    .then((data) => {
-        if (data) {
-           
-          setVendorsData(data);
-           // console.log("Vendor data is ",data)
-           // setCondition('0');
-           
-           // this.getCurrentLocation();
-  
+        cToken,vToken,clientId
+      }
+      fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/delete1/?id=${appoitmentData.id}` ,{
+            method: "DELETE",
+            body: JSON.stringify(user),
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data) {
+               
+             // setVendorsData(data);
+            // alert("Are you sure?")
+                console.log("appoitment is ",data)
+                navigation.navigate("Home")
+              
+                
+               
+               // this.getCurrentLocation();
+      
+            
+                //const value=AsyncStorage.getItem('jwt')
+               //console.log("token value is ",value)
+               
+      
+            }
+        })
+        .catch((err) => {
+           alert("incorrect details.Check your details again")
+           console.log(err)
         
-            //const value=AsyncStorage.getItem('jwt')
-           //console.log("token value is ",value)
-           
-  
-        }
-    })
-    .catch((err) => {
-       alert("incorrect details.Check your details again")
-       console.log(err)
+            
+        });
+     
+    }
+    const onCancel = ()=>{
+      console.log('on caaaaaaaaaaanceeelllllll')
+const user={
+
+};
+
+      const { orderId , vendorId } = route.params;
+     fetch(`http://${BaseUrl.wifi}:3000/api/v1/cancelledOrder/` ,{
+            method: "POST",
+            body: JSON.stringify(appoitmentData),
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            if (data) {
+               
+             // setVendorsData(data);
+            // alert("Are you sure?")
+                console.log("appoitment is ",data)
+                deleteOngoing()
+              
+                
+               
+               // this.getCurrentLocation();
+      
+            
+                //const value=AsyncStorage.getItem('jwt')
+               //console.log("token value is ",value)
+               
+      
+            }
+        })
+        .catch((err) => {
+           alert("incorrect details.Check your details again")
+           console.log(err)
+        
+            
+        });
+      
     
-        
-    });
+     
      }
      const getVendorsData =(vendorId)=>{
       fetch(`http://${BaseUrl.wifi}:3000/api/v1/vendor/?id=${vendorId}` ,{
@@ -443,7 +528,7 @@ array2.push(vendorsData[i])
                 </Text>
               </View>
               <TouchableOpacity
-              onPress={()=>{navigation.pop()}}
+              onPress={()=>{onCancel()}}
               >
               <View style={[styles.userCityRow,{backgroundColor:Colors.smallcard,elevation:10,borderRadius:10,padding:6,marginTop:20}]}>
                 <Text style={[styles.userCityText,{color:Colors.secondary,fontSize:14,alignSelf:'center'}]}>

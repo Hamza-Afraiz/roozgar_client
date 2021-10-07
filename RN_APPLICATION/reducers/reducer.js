@@ -4,7 +4,9 @@ const initState = {
     userData:{},
     loading:true,
     categoryId:'',
-    complainData:{}
+    complainData:{},
+    intervalData:'',
+    arrivedData:''
 }
 
 export const reducer = (state = initState,action)=>{
@@ -42,6 +44,18 @@ export const reducer = (state = initState,action)=>{
         return {
             ...state,
             complainData:action.payload
+        }
+    }
+    if(action.type=="ADD_INTERVALDATA"){
+        return {
+            ...state,
+            intervalData:action.payload
+        }
+    }
+    if(action.type=="ADD_ARRIVEDDATA"){
+        return {
+            ...state,
+            arrivedData:action.payload
         }
     }
     

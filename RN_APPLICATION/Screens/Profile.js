@@ -216,10 +216,13 @@ class Profile extends Component {
           .collection("vendorLocations")
           .doc(vendorIdd).get();
           console.log("vendor location is",vendorLocation)
-         const var1= vendorLocation.data().vendorToken;
+          if(vendorLocation.data()){
+            const var1= vendorLocation.data().vendorToken;
 
-         console.log("var 1 is",var1)
-         this.onSet(var1)
+            console.log("var 1 is",var1)
+            this.onSet(var1)
+          }
+         
         // this.setState({vendorToken:vendorLocation.data().vendorToken})
  // this.onOrder();
 }

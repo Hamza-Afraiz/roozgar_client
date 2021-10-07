@@ -53,7 +53,7 @@ const DATA = [
   ];
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Icon2 from 'react-native-vector-icons/FontAwesome';
-
+import { useIsFocused } from '@react-navigation/native';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -69,10 +69,13 @@ import {
 } from 'react-native-responsive-screen';
 import Textarea from 'react-native-textarea';
 import AuthGlobal from "../Context/store/AuthGlobal";
-
+import {useSelector,useDispatch} from 'react-redux'
  
 function Receipt({route,navigation}) {
+  const isFocused = useIsFocused();
   const context = useContext(AuthGlobal);
+  const dispatch  = useDispatch();
+
     const [modalVisible, setModalVisible] = React.useState(false);
     const [vendorId,setVendorId]=React.useState('');
     const [clientId,setClientId]=React.useState('');
@@ -83,34 +86,44 @@ function Receipt({route,navigation}) {
     const [data,setData]=React.useState({});
     const [vendorName,setVendorName]=React.useState('');
     const [appoitmentId,setAppoitmentId]=React.useState('');
+    const setArrived=()=>{
+      console.log("arrived to zero")
     
+      dispatch({type:"ADD_ARRIVEDDATA",payload:""})
+  }
     
     const onChange  = (item) =>  {
         setTextarea(item);
   
     };
+    const data3 =  useSelector((state)=>{
+      console.log("workking nowww")
+
    
+     return state.intervalData
+   })
     useEffect(() => {
+      setArrived()
+      console.log("workking now data 3 is",data3)
+      clearInterval(data3)
       
       let newdata = context.stateUser.userProfile['user'].userName;
       setClientName(newdata)
       console.log('client name from contedxt is ',newdata);
       const { item } = route.params;
     
-      console.log("item is",JSON.stringify(item))
+      console.log("item in receipt ",JSON.stringify(item))
     
       
-      console.log("item is",item);
+      //console.log("item is",item);
       setVendorId(item.vendorId);
       setClientId(item.clientId);
       setServiceId(item.serviceId);
       setVendorName(item.vendorName);
       setAppoitmentId(item.id);
       setData(item);
-        return () => {
-          
-        }
-      }, [])
+       
+      }, [isFocused])
     const uploadReview=()=>{
       setModalVisible(!modalVisible);
 
@@ -249,7 +262,7 @@ function Receipt({route,navigation}) {
                         <View style={{width:'50%',display:'flex',flexDirection: 'row',height:'70%',alignSelf:'flex-end',marginBottom:'4%',marginLeft:'2%',}}> 
                             
                         <Image
-                     source={{uri: data.image}}
+                     source={{uri: data.vendorImage}}
                   style={{
                     alignSelf: 'flex-start',
                     
@@ -268,7 +281,7 @@ function Receipt({route,navigation}) {
                      alignSelf:'center',
                      marginTop: hp('0%')
                      
-                    }}> {data.vendorName}</Text>
+                    }}> {data.vendorUserName}</Text>
                     <View style={{display:'flex',flexDirection: 'row',marginTop:'4%'}}>
                     <Text
                     style={{
@@ -304,7 +317,7 @@ function Receipt({route,navigation}) {
                      fontWeight:'bold',
                      alignSelf:'center'
                      
-                    }}>Rs{data.price}</Text>
+                    }}>Rs{data.servicePrice}</Text>
                       <Text
                     style={{
                       color: 'lightgrey',
@@ -312,7 +325,7 @@ function Receipt({route,navigation}) {
                      fontWeight:'bold',
                      textAlign:'center',
                      
-                    }}> {data.completionTime} </Text>
+                    }}> 2 hour </Text>
                     
 
                   
@@ -398,7 +411,7 @@ function Receipt({route,navigation}) {
                 
                      marginLeft:wp(3),marginBottom:hp(0.5)
                      
-                    }}> Description </Text>
+                    }}> Client Location </Text>
                      <Text
                      numberOfLines={3}
                     style={{
@@ -408,7 +421,7 @@ function Receipt({route,navigation}) {
                      
                      marginLeft:wp(3)
                      
-                    }}> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</Text>
+                    }}> {data.clientLocation}</Text>
                          <View style={{marginVertical:hp(1)}}>
                         <Text style={{color: 'lightgrey',alignSelf:'center'}}>
                             - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -439,7 +452,7 @@ function Receipt({route,navigation}) {
                      
                      marginRight:wp(3)
                      
-                    }}>Rs{data.price}</Text>
+                    }}>Rs{data.servicePrice}</Text>
                    
                     </View>
                     <View style={{marginBottom:hp(1),display:'flex',flexDirection: 'row',justifyContent:'space-between',marginHorizontal:wp(1)}}>
@@ -451,7 +464,7 @@ function Receipt({route,navigation}) {
                      
                      marginLeft:wp(2)
                      
-                    }}> Discount </Text>
+                    }}> Distance charges </Text>
                     <Text
                     style={{
                       color: '#333132',
@@ -459,7 +472,7 @@ function Receipt({route,navigation}) {
                      
                      marginRight:wp(3)
                      
-                    }}>Rs 0.00</Text>
+                    }}>{data.distanceCharges}</Text>
                    
                     </View>
                     <View style={{marginBottom:hp(1),display:'flex',flexDirection: 'row',justifyContent:'space-between',marginHorizontal:wp(1)}}>
@@ -471,7 +484,7 @@ function Receipt({route,navigation}) {
                      
                      marginLeft:wp(2)
                      
-                    }}> Paid Amount </Text>
+                    }}> Total Amount </Text>
                     <Text
                     style={{
                       color: '#333132',
@@ -479,7 +492,7 @@ function Receipt({route,navigation}) {
                      
                      marginRight:wp(3)
                      
-                    }}>Rs{data.price}</Text>
+                    }}>Rs{data.totalAmount}</Text>
                    
                     </View>
                     <View style={{marginVertical:hp(0)}}>

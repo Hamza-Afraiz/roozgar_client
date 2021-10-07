@@ -346,6 +346,7 @@ const ServicesNavigator = ({navigation}) => {
                   headerStyle: {
                       backgroundColor: Colors.secondary
                   },
+                  headerLeft:false,
                   
                   
                 

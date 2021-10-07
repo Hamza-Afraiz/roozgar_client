@@ -1,5 +1,5 @@
-import React ,{useEffect,useContext}from 'react'
-import { View, Text,Button,TouchableOpacity ,Linking,PermissionsAndroid,Dimensions,StyleSheet,Image,ActivityIndicator,Alert} from 'react-native'
+import React ,{useEffect,useContext,useRef}from 'react'
+import { backHandler,View, Text,Button,TouchableOpacity ,Linking,PermissionsAndroid,Dimensions,StyleSheet,Image,ActivityIndicator,Alert} from 'react-native'
 import Geolocation from "@react-native-community/geolocation";
 import firestore from "@react-native-firebase/firestore";
 import AuthGlobal from "../Context/store/AuthGlobal";
@@ -10,10 +10,12 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Colors} from "../Constants/Colors.js";
 import Geocoder from "react-native-geocoder";
 import Icon2 from 'react-native-vector-icons/FontAwesome';
+import { BackHandler } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import {useSelector,useDispatch} from 'react-redux'
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 import MapViewDirections from 'react-native-maps-directions';
 const markers= [{
@@ -31,12 +33,14 @@ const markers= [{
   },  
 }]
 function Maps2  ({navigation,route}) {
+  const dispatch  = useDispatch();
   const {info }=route.params;
   if((info=='accepted')&& (value1=='0')){
     console.log("infoo is accepted")
     alert("Request Accepted")
     setValue1("1")
   }
+
     const context = useContext(AuthGlobal);
     const [vendorsData,setVendorsData]= React.useState({});
 const [superLat, setSuperLat] = React.useState(55.9754);
@@ -52,83 +56,141 @@ const [superLat, setSuperLat] = React.useState(55.9754);
   const[distance,setDistance]=React.useState('');
   const [appoitmentId,setAppoitmentId]=React.useState('');
   const [phoneNumber,setPhoneNumber]=React.useState('');
+  const[vToken,setVToken]=React.useState('');
+  const[token,setToken] =React.useState('');
+  const[clientId,setClientId] =React.useState('60b3b80d9a52a4223c4eb2eb');
 
   const[marker,setMarker]= React.useState({});
 
  
-//const newdata = context.stateUser.userProfile['user'].id;
-//console.log("new data is ",newdata)
+const newdata = context.stateUser.userProfile['user'].id;
+console.log("new data is ",newdata)
+//setClientId(newdata);
+const data3 =  useSelector((state)=>{
+  console.log("getting arrived now")
+
+
+ return state.arrivedData
+})
+const data4 =  useSelector((state)=>{
+  console.log("getting interval now")
+
+
+ return state.intervalData
+})
     React.useEffect(() => {
-      console.log("react useeeeeeeeeeeeeee effectttttttttttttttttttttttt")
-     getData();
-     getCurrentLocation();
-     
-     navigation.setOptions({
-      title: "LOCATION",
-     
-                    headerRight: () => (
-                      <Icon2
-                      name='phone'
-                      size={wp(7)}
-                      color='white'
-                      onPress={() =>{Linking.openURL(`tel://${phoneNumber}`).catch(err => console.log('Error:', err))}}
-                      style={{
-                         alignSelf: 'flex-end',
-                        
-                         height: hp('5%'),
-                         width: wp('6%'),
-                         marginLeft: wp('1%'),
-                         marginRight:wp("2%"),
-                         marginTop:hp('2%'),
-                         
-                       }}
-                     />
-                    )
-    })
+    //  let isMounted = true;
     
-      //console.log('vendir data is ',vendorsData)
+        messaging().getToken().then((response) => {setToken(response);
+          console.log(" client token istoken is",response)})
+        // navigation.addListener('beforeRemove', (e) => {
+          
+  
+        //   // Prevent default behavior of leaving the screen
+        //   e.preventDefault();
+  
+        //   // Prompt the user before leaving the screen
+        //   Alert.alert(
+        //     'Discard service?',
+        //     '. Are you sure you want to cancel the service and leave the screen?',
+        //     [
+        //       { text: "Don't cancel", style: 'cancel', onPress: () => {} },
+        //       {
+        //         text: 'Cancel',
+        //         style: 'destructive',
+        //         // If the user confirmed, then we dispatch the action we blocked earlier
+        //         // This will continue the action that had triggered the removal of the screen
+        //         onPress: () => navigation.dispatch(e.data.action),
+        //       },
+        //     ]
+        //   );
+        // }),
+        console.log("react useeeeeeeeeeeeeee effectttttttttttttttttttttttt")
      
-    
-      requestLocationPermission();
-     
-     
-      //console.log("get current location")
-      Geolocation.getCurrentPosition(
-        (data) => {
-          setSuperLat(data.coords.latitude);
-          setSuperLong(data.coords.longitude);
-          console.log('cureent location is',data.coords);
-        },
-        (error) => console.log(error),
-        {
-          enableHighAccuracy: false,
-          timeout: 20000,
-          maximumAge: 30000,
-        }
-      );
-      setInterval(getCurrentLocation, 30000);
-     // console.log('direeeeeeectlty getting is ',getCurrentLocation())
-    
-      
-      
-    
-   // console.log("get cururrrrrrrent location ",)
+        getData()
+        
+        getCurrentLocation();
    
-    
+       
+       navigation.setOptions({
+        title: "LOCATION",
+       
+                      headerRight: () => (
+                        <Icon2
+                        name='phone'
+                        size={wp(7)}
+                        color='white'
+                        onPress={() =>{Linking.openURL(`tel://${phoneNumber}`).catch(err => console.log('Error:', err))}}
+                        style={{
+                           alignSelf: 'flex-end',
+                          
+                           height: hp('5%'),
+                           width: wp('6%'),
+                           marginLeft: wp('1%'),
+                           marginRight:wp("2%"),
+                           marginTop:hp('2%'),
+                           
+                         }}
+                       />
+                      )
+      })
       
-       // setClientId(newdata);
+        //console.log('vendir data is ',vendorsData)
+       
+      
+        requestLocationPermission();
+       
+       
+        //console.log("get current location")
+        Geolocation.getCurrentPosition(
+          (data) => {
+            
+            setSuperLat(data.coords.latitude);
+            setSuperLong(data.coords.longitude);
+            console.log('cureent location is',data.coords);
+          },
+          (error) => console.log(error),
+          {
+            enableHighAccuracy: false,
+            timeout: 20000,
+            maximumAge: 30000,
+          }
+        );
+  
+        const intervalId=setInterval(getCurrentLocation, 15000);
+        console.log('interval is ',intervalId);
+        dispatch({type:"ADD_INTERVALDATA",payload:intervalId})
+       
+       // console.log('direeeeeeectlty getting is ',getCurrentLocation())
+      
+        
+        
+      
+     // console.log("get cururrrrrrrent location ",)
      
-        //getCurrentLocation();
-        
-     //   console.log('vendors length is',vendorsData.length)
-     //   if(vendorsData.length>1){
-          //console.log('vendors length is',vendorsData.length)
-         // console.log("calling filtering")
-         // filterVendors();
-       // }
       
         
-    }, [superLat,superLong,superLat1,superLong1]);
+         // setClientId(newdata);
+       
+          //getCurrentLocation();
+          
+       //   console.log('vendors length is',vendorsData.length)
+       //   if(vendorsData.length>1){
+            //console.log('vendors length is',vendorsData.length)
+           // console.log("calling filtering")
+           // filterVendors();
+         // }
+        
+         const backHandler = BackHandler.addEventListener(
+          "hardwareBackPress",
+          () => true
+        );
+        
+      
+   
+      return () => backHandler.remove();
+     
+    }, []);
   
     const requestLocationPermission = async () => {
       try {
@@ -281,7 +343,11 @@ const [superLat, setSuperLat] = React.useState(55.9754);
   }
    
     const getCurrentLocation = async() => {
-      console.log("getCurrentLocation called")
+      if(superLat==55.9754 && superLong==21.4735){
+       
+
+      }
+      console.log("getCurrentLocation calleddddddddddddddddddddd")
       const { orderId , vendorId } = route.params;
     //   fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/appoitmentId/?id=${orderId}` ,{
     //     method: "GET",
@@ -400,6 +466,7 @@ const [superLat, setSuperLat] = React.useState(55.9754);
       .collection("vendorLocations")
       .doc(vendorId).get();
       console.log("vendor location is",vendorLocation)
+      setVToken(vendorLocation.data().vendorToken)
      const var1= vendorLocation.data();
 
      console.log("var 1 is",var1)
@@ -420,10 +487,18 @@ const [superLat, setSuperLat] = React.useState(55.9754);
       
      // onOrder();
     }
-    const onCancel = ()=>{
-     fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/delete/?id=${appoitmentId}` ,{
+    const deleteOngoing=() => {
+      const { orderId , vendorId } = route.params;
+      const cToken=token;
+      
+      const user={
+        
+        cToken,vToken,clientId
+      }
+      console.log("user is ",user)
+      fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/delete1/?id=${orderId}` ,{
             method: "DELETE",
-            
+            body: JSON.stringify(user),
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
@@ -434,8 +509,10 @@ const [superLat, setSuperLat] = React.useState(55.9754);
             if (data) {
                
              // setVendorsData(data);
-             alert("Are you sure?")
+            // alert("Are you sure?")
                 console.log("appoitment is ",data)
+                navigation.navigate("Home")
+              
                 
                
                // this.getCurrentLocation();
@@ -453,6 +530,59 @@ const [superLat, setSuperLat] = React.useState(55.9754);
         
             
         });
+     
+    }
+    const onCancel = ()=>{
+      console.log('on caaaaaaaaaaanceeelllllll')
+      console.log("data 3 is ",data3)
+      if(data3==''){
+        const user={
+
+        };
+        
+              const { orderId , vendorId } = route.params;
+             fetch(`http://${BaseUrl.wifi}:3000/api/v1/cancelledOrder/` ,{
+                    method: "POST",
+                    body: JSON.stringify(appoitmentData),
+                    headers: {
+                        Accept: "application/json",
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data) {
+                       
+                     // setVendorsData(data);
+                    // alert("Are you sure?")
+                        console.log("appoitment is ",data)
+                        console.log("data4 is ",data4)
+                        clearInterval(data4)
+                        deleteOngoing()
+                      
+                        
+                       
+                       // this.getCurrentLocation();
+              
+                    
+                        //const value=AsyncStorage.getItem('jwt')
+                       //console.log("token value is ",value)
+                       
+              
+                    }
+                })
+                .catch((err) => {
+                   alert("incorrect details.Check your details again")
+                   console.log(err)
+                
+                    
+                });
+              
+        
+      }
+      else{
+        alert("Vendor is arrived !You cant cancel now")
+      }
       
     
      
@@ -479,10 +609,30 @@ const [superLat, setSuperLat] = React.useState(55.9754);
               res[0].subAdminArea
           );
         });
-        if(superLat!=55.9754 && superLong!=21.4735){
-          const dd=getDistance(superLat,superLong,var1.vendorLocation._latitude,var1.vendorLocation._longitude)
+        console.log("super long is",superLong,"super lat is",superLat)
+        Geolocation.getCurrentPosition(
+          (data) => {
+            setSuperLat(data.coords.latitude);
+            setSuperLong(data.coords.longitude);
+            const dd=getDistance(data.coords.latitude,data.coords.longitude,var1.vendorLocation._latitude,var1.vendorLocation._longitude)
+            console.log('cureent location is',data.coords);
+          },
+          (error) => {console.log(error)
+         // alert("Location error .Please check your location")
         }
+          ,
+          {
+            enableHighAccuracy: false,
+            timeout: 2000,
+            maximumAge: 3000,
+          }
+        );
+        // if(superLat!=55.9754 && superLong!=21.4735){
+        //   console.log("if called");
+        //   const dd=getDistance(superLat,superLong,var1.vendorLocation._latitude,var1.vendorLocation._longitude)
+        // }
        
+      // setCondition('1');
         
     }
     const GOOGLE_MAPS_APIKEY = 'AIzaSyCBXTIffD69ZbWGyAcQlZduzuqcf7cRjok';
@@ -609,7 +759,7 @@ const [superLat, setSuperLat] = React.useState(55.9754);
                       </TouchableOpacity>
 
                     
-                    <TouchableOpacity onPress={onCancel}>
+                    <TouchableOpacity onPress={()=>{onCancel()}}>
 
                     <Text
                     style={{

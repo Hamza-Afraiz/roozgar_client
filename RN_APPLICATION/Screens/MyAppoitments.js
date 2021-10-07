@@ -15,6 +15,7 @@ import {
 import { BaseUrl } from "../Constants/baseUrl.js";
 import Receipt from "./Receipt";
 import UpcomingAppoitment from "./upcomingAppoitment";
+import moment from "moment";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 const DATA1 = [
     {
@@ -63,6 +64,7 @@ import {
   StatusBar,
   Image,FlatList, Switch,SafeAreaView,Modal,Pressable
 } from 'react-native';
+import { useIsFocused } from '@react-navigation/native';
 import Textarea from 'react-native-textarea';
 import LinearGradient from 'react-native-linear-gradient';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
@@ -80,7 +82,7 @@ function MyAppoitments({navigation}) {
   const [modalVisible, setModalVisible] = React.useState(false);
   const dispatch=useDispatch()
 
-  
+  const isFocused = useIsFocused();
     const [isEnabled, setIsEnabled] = useState(true);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     const [textarea, setTextarea] = useState('');
@@ -121,7 +123,7 @@ function MyAppoitments({navigation}) {
      
         onLoadData()
        
-      }, []);
+      }, [isFocused]);
     const complainData=(item)=>{
       console.log("item in appoitments is ",item)
       dispatch({type:'ADD_COMPLAINDATA',payload:item})
@@ -259,8 +261,40 @@ const setHomeVisits = () =>{
 
 }
   const nav=(item1)=>{
-    navigation.navigate('Receipt',{item:item1})
-    console.log("item is",item1);
+    console.log("nav worked");
+    fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/getReceiptByAppoitmentId/?id=${item1.id}` ,{
+      method: "GET",
+      
+      headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+      },
+  })
+  .then((res) => res.json())
+  .then((data) => {
+      if (data) {
+         
+          //const item=data;
+          console.log("receipt id  data in appoitmrntd is ",data)
+          navigation.navigate("Receipt",{item:data})
+
+         
+         // this.getCurrentLocation();
+
+      
+          //const value=AsyncStorage.getItem('jwt')
+         //console.log("token value is ",value)
+         
+
+      }
+  })
+  .catch((err) => {
+     alert("incorrect details.Check your details again")
+     console.log(err)
+  
+      
+  });
+   
   }
   const onOrder=()=>{
   
@@ -669,7 +703,7 @@ const setHomeVisits = () =>{
                     </View> 
                        
                    </View>:(getPageDetails) == 'HomeVisits' ?  <TouchableOpacity > 
-                       <TouchableOpacity onPress={() => {navigation.navigate('Receipt',{item:item})}}>
+                       <TouchableOpacity onPress={() => {nav(item)}}>
 
                        
             <View
@@ -1320,8 +1354,8 @@ const setHomeVisits = () =>{
 
                
                 
-<View style={styles.notificationTab}>
-    <View style={{display:'flex',flexDirection:'row'}}>
+<View style={[styles.notificationTab]}>
+    <View style={{display:'flex',flexDirection:'row',width:'40%'}}>
 
 <View>
 <Image
@@ -1352,7 +1386,7 @@ const setHomeVisits = () =>{
                     <Text
                     style={{
                       color: 'grey',
-                      fontSize: RFValue(10, 580),
+                      fontSize: RFValue(9, 580),
                      fontWeight:'700',
                      
                      
@@ -1382,7 +1416,10 @@ const setHomeVisits = () =>{
                     
 
                     
-                    }}> Completion Time is {item.completionTime}</Text>
+                    }}> 
+                    {moment(item.dateCreated).format(
+                      "dddd, MMMM Do, YYYY"
+                    )}{" "}</Text>
                     
                     <View style={{display:'flex',flexDirection:'row'}}>
                     <Icon
@@ -1398,6 +1435,7 @@ const setHomeVisits = () =>{
                     
                   }}
                 />
+                <TouchableOpacity onPress={() => {nav(item)}}>
                     <Text
                     style={{
                       color: Colors.secondary,
@@ -1412,6 +1450,7 @@ const setHomeVisits = () =>{
 
                     
                     }}>Get Your Receipt Now</Text>
+                    </TouchableOpacity>
                     </View>
                      
                     </View>
@@ -1449,7 +1488,7 @@ const setHomeVisits = () =>{
                     </View> 
                        
                    </View>:(getPageDetails) == 'HomeVisits' ?  <TouchableOpacity > 
-                       <TouchableOpacity onPress={() => {navigation.navigate('Receipt',{item:item})}}>
+                       <TouchableOpacity onPress={() => {nav(item)}}>
 
                        
             <View
@@ -1524,7 +1563,8 @@ const setHomeVisits = () =>{
 
 const styles = StyleSheet.create({
     notificationTab:{
-        height: hp('17%'),
+        minHeight: hp('22%'),
+        maxHeight:hp('24%'),
 
         width:wp('98%'),
         alignSelf:'center',
