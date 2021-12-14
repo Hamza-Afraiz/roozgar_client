@@ -13,6 +13,7 @@ import MapViewDirections from 'react-native-maps-directions';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {useSelector,useDispatch} from 'react-redux'
 import { BackHandler } from "react-native";
+import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -48,12 +49,47 @@ const [value,setValue]=React.useState('0');
 const [value2,setValue2]=React.useState('0');
 const[condition,setCondition]=React.useState('0')
 const[subCategory,setSubCategory]=React.useState('');
+
 // let componentMounted = true;
 const dispatch  = useDispatch();
 let isMounted = true; 
     React.useEffect(() => {
      
       if (isMounted)  {
+        RNAndroidLocationEnabler.promptForEnableLocationIfNeeded({
+          interval: 10000,
+          fastInterval: 5000,
+        })
+          .then((data) => {
+            Geolocation.getCurrentPosition(
+              (data) => {
+                setSuperLat(data.coords.latitude);
+                setSuperLong(data.coords.longitude);
+                console.log('cureent location in enabler',data.coords);
+
+              
+              },
+              (error) => console.log(error),
+              {
+                enableHighAccuracy: false,
+                timeout: 2000,
+                maximumAge: 360000,
+              }
+            );
+            // The user has accepted to enable the location services
+            // data can be :
+            //  - "already-enabled" if the location services has been already enabled
+            //  - "enabled" if user has clicked on OK button in the popup
+          })
+          .catch((err) => {
+            // The user has not accepted to enable the location services or something went wrong during the process
+            // "err" : { "code" : "ERR00|ERR01|ERR02|ERR03", "message" : "message"}
+            // codes :
+            //  - ERR00 : The user has clicked on Cancel button in the popup
+            //  - ERR01 : If the Settings change are unavailable
+            //  - ERR02 : If the popup has failed to open
+            //  - ERR03 : Internal error
+          });
         
        
       navigation.setOptions({
@@ -83,7 +119,7 @@ let isMounted = true;
        
       
     
-      requestLocationPermission();
+     requestLocationPermission();
      
       messaging().getToken().then((response) => {setToken(response);
       console.log(" client token istoken is",response)})
@@ -97,7 +133,7 @@ let isMounted = true;
         (error) => console.log(error),
         {
           enableHighAccuracy: false,
-          timeout: 20000000,
+          timeout: 2000,
           maximumAge: 360000,
         }
       );
@@ -267,7 +303,7 @@ array2.push(vendorsData[i])
       
        console.log("fetching data")
        
-       fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/`, {
+       fetch(`${BaseUrl.wifi}/api/v1/ongoingOrder/`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
@@ -307,7 +343,7 @@ array2.push(vendorsData[i])
         
         cToken,vToken,clientId
       }
-      fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/delete1/?id=${appoitmentData.id}` ,{
+      fetch(`${BaseUrl.wifi}/api/v1/ongoingOrder/delete1/?id=${appoitmentData.id}` ,{
             method: "DELETE",
             body: JSON.stringify(user),
             headers: {
@@ -350,7 +386,7 @@ const user={
 };
 
       const { orderId , vendorId } = route.params;
-     fetch(`http://${BaseUrl.wifi}:3000/api/v1/cancelledOrder/` ,{
+     fetch(`${BaseUrl.wifi}/api/v1/cancelledOrder/` ,{
             method: "POST",
             body: JSON.stringify(appoitmentData),
             headers: {
@@ -389,7 +425,7 @@ const user={
      
      }
      const getVendorsData =(vendorId)=>{
-      fetch(`http://${BaseUrl.wifi}:3000/api/v1/vendor/?id=${vendorId}` ,{
+      fetch(`${BaseUrl.wifi}/api/v1/vendor/?id=${vendorId}` ,{
         method: "GET",
         
         headers: {

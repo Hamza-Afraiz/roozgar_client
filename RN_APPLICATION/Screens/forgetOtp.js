@@ -23,7 +23,7 @@ const ForgetOtp = ({ route,navigation }) => {
     setId(id)
     console.log("phone number is",phone);
     console.log("id is ",id)
-  fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/sendOTP`, {
+  fetch(`${BaseUrl.wifi}/api/v1/client/sendOTP`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

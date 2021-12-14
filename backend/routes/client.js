@@ -1,13 +1,43 @@
 const {Client} = require('../models/client');
+const {Receipt} = require('../models/receipt');
 const express = require('express');
 const router = express.Router();
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const twilioAccountSid = "AC8c329ffc0ad4b7cd85b10e9004836408";
-const tiwiloAuthToken = "f09bb0d60bdd4724152c9ad1ee88fc77";
+const tiwiloAuthToken = "59abc0d8d9464c285f8c1613f41a1523";
 const twilioClient = require("twilio")(twilioAccountSid, tiwiloAuthToken)
+router.get(`/getReceipt/`, async (req, res) => {
+  let filter = {};
+  if (req.query.id) {
+      filter = { id: req.query.id };
+  }
 
+  const service = await Receipt.findById(req.query.id);
+
+  if (!service) {
+      res.status(500).json({ success: false });
+  }
+  res.send(service);
+});
+router.get(`/getReceiptByAppoitmentId/`, async (req, res) => {
+  let filter = {};
+  if (req.query.id) {
+      filter = { orderId: req.query.id };
+  }
+
+  const service = await Receipt.findOne(filter);
+  console.log("service is ",service)
+
+  if (!service) {
+      res.status(500).json({ success: false });
+  }
+  else{
+    res.send(service);
+  }
+  
+});
 router.post("/sendOTP", async (req, res) => {
     twilioClient.messages
       .create({

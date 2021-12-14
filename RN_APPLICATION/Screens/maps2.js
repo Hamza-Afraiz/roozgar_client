@@ -1,4 +1,4 @@
-import React ,{useEffect,useContext,useRef}from 'react'
+import React ,{useEffect,useContext,useRef,useState}from 'react'
 import { backHandler,View, Text,Button,TouchableOpacity ,Linking,PermissionsAndroid,Dimensions,StyleSheet,Image,ActivityIndicator,Alert} from 'react-native'
 import Geolocation from "@react-native-community/geolocation";
 import firestore from "@react-native-firebase/firestore";
@@ -42,31 +42,32 @@ function Maps2  ({navigation,route}) {
   }
 
     const context = useContext(AuthGlobal);
-    const [vendorsData,setVendorsData]= React.useState({});
-const [superLat, setSuperLat] = React.useState(55.9754);
-  const [superLong, setSuperLong] = React.useState(21.4735);
-  const [superLat1, setSuperLat1] = React.useState(55.9754);
-  const [superLong1, setSuperLong1] = React.useState(21.4735);
-  const[image,setImage] = React.useState('')
-  const [value, setValue] =React.useState("0")
-  const [value1,setValue1]=React.useState('0')
-  const[appoitmentData,setAppoitmentData]=React.useState({})
-  const[condition,setCondition]=React.useState('0')
-  const [clientLocation, setClientLocation] = React.useState("");
-  const[distance,setDistance]=React.useState('');
-  const [appoitmentId,setAppoitmentId]=React.useState('');
-  const [phoneNumber,setPhoneNumber]=React.useState('');
-  const[vToken,setVToken]=React.useState('');
-  const[token,setToken] =React.useState('');
-  const[clientId,setClientId] =React.useState('60b3b80d9a52a4223c4eb2eb');
+    const [vendorsData,setVendorsData]= useState({});
+const [superLat, setSuperLat] = useState(55.9754);
+  const [superLong, setSuperLong] = useState(21.4735);
+  const [superLat1, setSuperLat1] = useState(55.9754);
+  const [superLong1, setSuperLong1] = useState(21.4735);
+  const[image,setImage] = useState('')
+  const [value, setValue] =useState("0")
+  const [value1,setValue1]=useState('0')
+  const[appoitmentData,setAppoitmentData]=useState({})
+  const[condition,setCondition]=useState('0')
+  const [clientLocation, setClientLocation] = useState("");
+  const[distance,setDistance]=useState('');
+  const [appoitmentId,setAppoitmentId]=useState('');
+  const [phoneNumber,setPhoneNumber]=useState('');
+  const[vToken,setVToken]=useState('');
+  const[token,setToken] =useState('');
+  const[clientId,setClientId] =useState('60b3b80d9a52a4223c4eb2eb');
 
-  const[marker,setMarker]= React.useState({});
+  const[marker,setMarker]= useState({});
 
  
 const newdata = context.stateUser.userProfile['user'].id;
 console.log("new data is ",newdata)
 //setClientId(newdata);
-const data3 =  useSelector((state)=>{
+const data3 =  useSelector((state
+  )=>{
   console.log("getting arrived now")
 
 
@@ -78,7 +79,7 @@ const data4 =  useSelector((state)=>{
 
  return state.intervalData
 })
-    React.useEffect(() => {
+    useEffect(() => {
     //  let isMounted = true;
     
         messaging().getToken().then((response) => {setToken(response);
@@ -227,7 +228,7 @@ const data4 =  useSelector((state)=>{
   const getData = () => {
     console.log("getCurrentLocation called")
     const { orderId , vendorId } = route.params;
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/appoitmentId/?id=${orderId}` ,{
+    fetch(`${BaseUrl.wifi}/api/v1/ongoingOrder/appoitmentId/?id=${orderId}` ,{
       method: "GET",
       
       headers: {
@@ -309,7 +310,7 @@ const data4 =  useSelector((state)=>{
     });*/
   
     console.log("fetching data")
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/vendor/?id=${vendorId}` ,{
+    fetch(`${BaseUrl.wifi}/api/v1/vendor/?id=${vendorId}` ,{
       method: "GET",
       
       headers: {
@@ -349,7 +350,7 @@ const data4 =  useSelector((state)=>{
       }
       console.log("getCurrentLocation calleddddddddddddddddddddd")
       const { orderId , vendorId } = route.params;
-    //   fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/appoitmentId/?id=${orderId}` ,{
+    //   fetch(`${BaseUrl.wifi}/api/v1/ongoingOrder/appoitmentId/?id=${orderId}` ,{
     //     method: "GET",
         
     //     headers: {
@@ -431,7 +432,7 @@ const data4 =  useSelector((state)=>{
     //   });*/
     
     //   console.log("fetching data")
-    //   fetch(`http://${BaseUrl.wifi}:3000/api/v1/vendor/?id=${vendorId}` ,{
+    //   fetch(`${BaseUrl.wifi}/api/v1/vendor/?id=${vendorId}` ,{
     //     method: "GET",
         
     //     headers: {
@@ -496,7 +497,7 @@ const data4 =  useSelector((state)=>{
         cToken,vToken,clientId
       }
       console.log("user is ",user)
-      fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/delete1/?id=${orderId}` ,{
+      fetch(`${BaseUrl.wifi}/api/v1/ongoingOrder/delete1/?id=${orderId}` ,{
             method: "DELETE",
             body: JSON.stringify(user),
             headers: {
@@ -541,7 +542,7 @@ const data4 =  useSelector((state)=>{
         };
         
               const { orderId , vendorId } = route.params;
-             fetch(`http://${BaseUrl.wifi}:3000/api/v1/cancelledOrder/` ,{
+             fetch(`${BaseUrl.wifi}/api/v1/cancelledOrder/` ,{
                     method: "POST",
                     body: JSON.stringify(appoitmentData),
                     headers: {

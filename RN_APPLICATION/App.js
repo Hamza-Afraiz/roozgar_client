@@ -2,18 +2,20 @@
 import React ,{useState,useEffect}from 'react';
 import { StyleSheet, Text, View,Modal,Alert} from 'react-native';
 import Gardener   from "./Screens/Gardener";
-import  LoadingScreen from "./Screens/LoadingScreen";
+
 import Profile   from "./Screens/Profile";
 import {  Ionicons, AntDesign,FontAwesome5 } from "@expo/vector-icons";
 import  Signin  from "./Screens/Signin";
 import Signup from "./Screens/Signup";
 import AllServices from "./Screens/allservices";
+import SimiliarSubCategory from "./Screens/similiarSubCategory";
 import Complaint from "./Screens/Complaint.js";
 import Auth from "./Context/store/Auth";
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Colors } from './Constants/Colors';
 import Service from "./Screens/service";
+import InitialScreen from "./Screens/initialScreen";
 import Logout from './Screens/Logout'
 import Reviews from "./Screens/Reviews";
 import MyAppoitments from "./Screens/MyAppoitments";
@@ -41,6 +43,7 @@ import { BaseUrl } from "./Constants/baseUrl.js";
 import SignUp3 from "./Screens/signUp3.js";
 import OTP from "./Screens/OTP.js";
 import ForgetOtp from "./Screens/forgetOtp";
+import Chatbot from "./Screens/Chatbot";
 const store  = createStore(reducer)
 import {
   createDrawerNavigator,
@@ -69,7 +72,7 @@ export default function App({navigation,routeName}) {
       .then((remoteMessage) => {
         if (remoteMessage) {
           console.log("remote",remoteMessage.data);
-          fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/`, {
+          fetch(`${BaseUrl.wifi}/api/v1/ongoingOrder/`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -178,7 +181,7 @@ const ServicesNavigator = ({navigation}) => {
   return (
     
     <Stack.Navigator mode='modal'
-      initialRouteName={"Signin"}
+      initialRouteName={"InitialScreen"}
       
     >
         <Stack.Screen
@@ -256,6 +259,23 @@ const ServicesNavigator = ({navigation}) => {
       
       name="ForgetOtp"
       component={ForgetOtp}
+     options={({ navigation }) => ({
+                  headerTintColor: 'white',
+                  headerStyle: {
+                      backgroundColor: Colors.secondary
+                  },
+                  headerShown:false
+                  
+                
+                       
+              })
+              }
+      
+    />
+     <Stack.Screen
+      
+      name="InitialScreen"
+      component={InitialScreen}
      options={({ navigation }) => ({
                   headerTintColor: 'white',
                   headerStyle: {
@@ -576,11 +596,51 @@ const ServicesNavigator = ({navigation}) => {
               }
       
     />
+    <Stack.Screen
+      
+      name="Chatbot"
+      component={Chatbot}
+     options={({ navigation }) => ({
+                  headerTintColor: 'white',
+                  headerStyle: {
+                      backgroundColor: Colors.secondary
+                  },
+                  swipeEnabled: false,
+                  drawerLabel: () => null,
+                
+                       
+              })
+              }
+      
+    />
     
       <Stack.Screen
       
       name="Services"
       component={Gardener}
+     options={({ navigation }) => ({
+                  headerTintColor: 'white',
+                  headerStyle: {
+                      backgroundColor: Colors.secondary
+                  },
+                  headerLeft: () =>
+                      <View style={{ paddingLeft: 10 }}>
+                          <Ionicons
+                              name="md-menu"
+                              color="white"
+                              size={32}
+                              onPress={() => navigation.toggleDrawer()}
+                          />
+                      </View>,
+                       
+              })
+              }
+      
+    />
+     <Stack.Screen
+      
+      name="SimiliarSubCategory"
+      component={SimiliarSubCategory}
      options={({ navigation }) => ({
                   headerTintColor: 'white',
                   headerStyle: {

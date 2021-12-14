@@ -1,4 +1,4 @@
-import React, {Component,useState,useEffect,useContext} from 'react';
+import React, {Component,useState,useEffect,useContext,useRef} from 'react';
 import {
   Container,
   Text,
@@ -11,6 +11,7 @@ import {
   Button,
   Title,
   Content,
+  ActivityIndicator,
 } from 'native-base';
 import { BaseUrl } from "../Constants/baseUrl.js";
 import Receipt from "./Receipt";
@@ -81,9 +82,10 @@ function MyAppoitments({navigation}) {
   const [userData,setUserData] = useState({"firstName":"Ali"})
   const [modalVisible, setModalVisible] = React.useState(false);
   const dispatch=useDispatch()
-
+  const componentMounted = useRef(true)
   const isFocused = useIsFocused();
     const [isEnabled, setIsEnabled] = useState(true);
+    const [check,setCheck]=useState("0");
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
     const [textarea, setTextarea] = useState('');
     const onChange  = (item) =>  {
@@ -112,7 +114,8 @@ function MyAppoitments({navigation}) {
     
     }
     useEffect(() => {
-      console.log(context.stateUser.userProfile) ;
+      console.log("context in appois",context.stateUser.userProfile) ;
+      if (componentMounted.current){ 
       if(context.stateUser.isAuthenticated){
        let newdata = context.stateUser.userProfile['user'];
 
@@ -121,8 +124,11 @@ function MyAppoitments({navigation}) {
       
       }
      
-        onLoadData()
-       
+        onLoadData()}
+      
+        return () => { // This code runs when component is unmounted
+          componentMounted.current = false; // (4) set it to false when we leave the page
+      }
       }, [isFocused]);
     const complainData=(item)=>{
       console.log("item in appoitments is ",item)
@@ -141,8 +147,9 @@ function MyAppoitments({navigation}) {
         console.log("fetching data")
       //  const api = process.env.BASE_URL2;
       let newdata = context.stateUser.userProfile['user'].id;
+     
       
-       fetch(`http://${BaseUrl.wifi}:3000/api/v1/acceptedOrder/?id=${newdata}` ,{
+       fetch(`${BaseUrl.wifi}/api/v1/acceptedOrder/?id=${newdata}` ,{
          method: "GET",
          
          headers: {
@@ -156,6 +163,8 @@ function MyAppoitments({navigation}) {
              setData(data);
              setUpcomingData(data);
              console.log("accepted orders =",data);
+             console.log("seeeeeting check")
+             setCheck('1');
          }
            
      })
@@ -165,7 +174,7 @@ function MyAppoitments({navigation}) {
      
          
      });
-     fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/?id=${newdata}` ,{
+     fetch(`${BaseUrl.wifi}/api/v1/ongoingOrder/?id=${newdata}` ,{
         method: "GET",
         
         headers: {
@@ -179,6 +188,7 @@ function MyAppoitments({navigation}) {
             setOngoingData(data);
            // setUpcomingData(data);
             console.log("ongoing appoitments data us =",data);
+            setCheck('1');
         }
           
     })
@@ -193,31 +203,31 @@ function MyAppoitments({navigation}) {
     
 
 
-  const setPersonal = () =>{
-    setPersonalColor('white');
-    setProfessionalColor('lightgrey');
-    setUpcomingColor('lightgrey');
+//   const setPersonal = () =>{
+//     setPersonalColor('white');
+//     setProfessionalColor('lightgrey');
+//     setUpcomingColor('lightgrey');
 
-      setDetails('Personal');
+//       setDetails('Personal');
      
-    console.log(getDetails);
-  }
-  const setProfessional = () =>{
-    setProfessionalColor('white');
-    setPersonalColor('lightgrey');
-    setUpcomingColor('lightgrey');
-    setDetails('Professional');
+//     console.log(getDetails);
+//   }
+//   const setProfessional = () =>{
+//     setProfessionalColor('white');
+//     setPersonalColor('lightgrey');
+//     setUpcomingColor('lightgrey');
+//     setDetails('Professional');
     
-  console.log(getDetails);
-}
-const setUpcoming = () =>{
-    setUpcomingColor('white');
-    setPersonalColor('lightgrey');
-    setProfessionalColor('lightgrey');
-    setDetails('Upcoming');
+//   console.log(getDetails);
+// }
+// const setUpcoming = () =>{
+//     setUpcomingColor('white');
+//     setPersonalColor('lightgrey');
+//     setProfessionalColor('lightgrey');
+//     setDetails('Upcoming');
     
-  console.log(getDetails);
-}
+//   console.log(getDetails);
+// }
 const [InClinicsColor,setInClinicsColor]=React.useState('lightgrey');
 const[VideoColor,setVideoColor]=React.useState('lightgrey');
 const[HomeColor,setHomeColor]=React.useState(Colors.secondary)
@@ -262,7 +272,7 @@ const setHomeVisits = () =>{
 }
   const nav=(item1)=>{
     console.log("nav worked");
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/getReceiptByAppoitmentId/?id=${item1.id}` ,{
+    fetch(`${BaseUrl.wifi}/api/v1/client/getReceiptByAppoitmentId/?id=${item1.id}` ,{
       method: "GET",
       
       headers: {
@@ -325,7 +335,7 @@ const setHomeVisits = () =>{
 
     
      console.log("fetching data")
-     fetch(`http://${BaseUrl.wifi}:3000/api/v1/upcomingOrder/`, {
+     fetch(`${BaseUrl.wifi}/api/v1/upcomingOrder/`, {
       method: "POST",
       body: JSON.stringify(user),
       headers: {
@@ -365,7 +375,7 @@ const setHomeVisits = () =>{
     
     var id=userData.id;
     console.log('getting rrquwst from ',id)
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/upcomingOrder/clientId/?id=${id}` ,{
+    fetch(`${BaseUrl.wifi}/api/v1/upcomingOrder/clientId/?id=${id}` ,{
         method: "GET",
         
         headers: {
@@ -445,6 +455,7 @@ const setHomeVisits = () =>{
                
                
                   </View>
+                    
                   
             <View style={{display:'flex',flexDirection:'row',marginTop:hp(2),height:hp(4),width:wp(100),justifyContent:'space-around',borderBottomWidth:1,borderBottomColor:'lightgrey'}}>
               <TouchableOpacity onPress={() =>{setHomeVisits()}}>
@@ -494,10 +505,25 @@ const setHomeVisits = () =>{
 
 </View>:null}
               </TouchableOpacity>
+              
            
             </View>
             
-
+            {(check)=='0'? <View style={{marginTop:'50%',marginBottom:'50%',alignSelf:'center'}}>
+            <Text style={{color:Colors.secondary,fontSize:22,fontWeight:'bold',alignSelf:'center'}}>
+              Really sorry for inconvenience..
+            </Text>
+            <Text style={{color:Colors.secondary}}>
+              Please Wait.
+            </Text>
+            
+                
+        
+               
+                        
+                       
+               
+          </View>:null}
             
                 
                 
@@ -561,9 +587,17 @@ const setHomeVisits = () =>{
           renderItem={({item}) => {
             return (
               <View>
+                  
 
               
               <ScrollView>
+              {(check == '0')? <View style={{alignSelf:'center',marginTop:'40%',backgroundColor:'black'}}>
+                
+                <ActivityIndicator size="large" color="#00ff00" />
+               
+                        
+                       
+               </View>:
 
               
                 <TouchableOpacity onPress={()=>{unSetModal()}}>
@@ -762,7 +796,7 @@ const setHomeVisits = () =>{
 </View>               
 
     </View>
-    </TouchableOpacity>   
+    </TouchableOpacity>  } 
     </ScrollView>
     </View>
                         
@@ -1343,7 +1377,7 @@ const setHomeVisits = () =>{
           renderItem={({item}) => {
             return (
                 <TouchableOpacity onPress={()=>{unSetModal()}}>
-                   {(Data.length)==0? <View style={{marginTop:'50%',marginBottom:'50%',alignSelf:'center'}}>
+                   {(check)=='0'? <View style={{marginTop:'50%',marginBottom:'50%',alignSelf:'center'}}>
             <Text style={{color:Colors.secondary,fontSize:22,fontWeight:'bold',alignSelf:'center'}}>
               Really sorry for inconvenience..
             </Text>
@@ -1456,26 +1490,14 @@ const setHomeVisits = () =>{
                     </View>
                     <View style={{display:'flex',flexDirection:'row',justifyContent:'space-between',width:'100%',marginTop:hp(2)}}>
                         
-                   {(item.id==getNum && getPageDetails == 'Video')?<View style={{width:wp('31%'),height:hp(8),backgroundColor:"#fff2",margin:hp(0),marginRight:hp(5),borderColor:'grey',borderRadius:10,borderWidth:1}}>
-                       <View style={{height:hp(4),width:wp('30.5%'),justifyContent:'center',alignItems:'center',backgroundColor:Colors.secondary,overflow:'hidden',borderRadius:10,borderWidth:0,borderColor:'#fff2'}}>
-                       <Text
-                    style={{
-                      color: 'white',
-                      fontSize: RFPercentage(1.5),
-                     fontWeight:'700',
-                     
-            
-                     alignSelf:'center',
-                     
-                  
-                    }}> Cancel </Text>
-                    </View> 
-                    <View style={{height:hp(4),width:wp('30.5%'),justifyContent:'center',alignItems:'center',backgroundColor:'#fff2',overflow:'hidden',borderRadius:20,borderWidth:2,borderColor:'#fff2'}}>
+                   {(item.id==getNum && getPageDetails == 'Video')?<View style={{width:wp('31%'),height:hp(6),backgroundColor:"#fff2",margin:hp(0),marginRight:hp(5),borderColor:'grey',borderRadius:10,borderWidth:1}}>
+                       
+                    <View style={{height:hp(5),width:wp('30.5%'),justifyContent:'center',alignItems:'center',backgroundColor:'#fff2',overflow:'hidden',borderRadius:20,borderWidth:2,borderColor:'#fff2'}}>
                        <TouchableOpacity onPress={() => {navigation.navigate('Complaint',{item:item})}}>
                        <Text
                     style={{
-                      color: 'grey',
-                      fontSize: RFPercentage(1.5),
+                      color: Colors.secondary,
+                      fontSize: RFPercentage(2),
                      fontWeight:'700',
                      
                

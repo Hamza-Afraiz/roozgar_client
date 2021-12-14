@@ -25,6 +25,42 @@ router.get('/appoitmentId/', async(req,res)=>{
     } 
     res.status(200).send(user);
 })
+router.delete('/delete1/', (req, res)=>{
+    console.log("vtoken is ",req.body.vToken)
+    console.log('client id is ',req.body.clientId)
+    OngoingOrder.findByIdAndDelete(req.query.id).then(user =>{
+        if(user) {
+            const message = {
+                notification:{
+                    title:"Order Cancelled by Client",
+                    body:"Sorry for the inconvenience",
+                   
+                },
+                data:{
+                   // clientId:'212352545253125231',
+                //     clientToken:req.body.cToken,
+                //     item:client.id,
+                //     Lat:req.body.lat,
+                //     Long:req.body.long,
+                   clientId:req.body.clientId,
+                //    serviceTitle:serviceTitle,
+                accepted:'cancelled'
+                            },
+                token:req.body.vToken
+            }
+                admin.messaging().send(message).then(res=>{
+                console.log(' notification send success')
+                }).catch(err=>{
+                 console.log(err)
+             })
+            return res.status(200).json({success: true, message: 'the user is deleted!'})
+        } else {
+            return res.status(404).json({success: false , message: "user not found!"})
+        }
+    }).catch(err=>{
+       return res.status(500).json({success: false, error: err}) 
+    })
+})
 router.delete('/delete/', (req, res)=>{
     OngoingOrder.findByIdAndDelete(req.query.id).then(user =>{
         if(user) {

@@ -124,7 +124,7 @@ const setHomeVisits = () =>{
      
      
         
-        fetch(`http://${BaseUrl.wifi}:3000/api/v1/complaint/notAnswered/?id=${id}`, {
+        fetch(`${BaseUrl.wifi}/api/v1/complaint/notAnswered/?id=${id}`, {
             method: "GET",
            
             headers: {
@@ -155,7 +155,7 @@ const setHomeVisits = () =>{
         
             
         });
-        fetch(`http://${BaseUrl.wifi}:3000/api/v1/complaint/?id=${id}`, {
+        fetch(`${BaseUrl.wifi}/api/v1/complaint/?id=${id}`, {
           method: "GET",
          
           headers: {

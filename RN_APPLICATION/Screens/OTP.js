@@ -20,7 +20,7 @@ const OTP = ({ route,navigation }) => {
  console.log("phone is",phone);
  React.useEffect(() => {
    console.log("use EFFect")
-  fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/sendOTP`, {
+  fetch(`${BaseUrl.wifi}/api/v1/client/sendOTP`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const verifyOTP = () => {
   const user=item1;
   console.log("user data before going is",user);
   if (generatedOTP === parseInt(enteredOTP)) {
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/register`, {
+    fetch(`${BaseUrl.wifi}/api/v1/client/register`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {

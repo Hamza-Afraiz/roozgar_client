@@ -135,7 +135,7 @@ class Profile extends Component {
     const id =this.props.route.params.vendorId;
     
      console.log("fetching data")
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/vendor/?id=${id}` ,{
+    fetch(`${BaseUrl.wifi}/api/v1/vendor/?id=${id}` ,{
       method: "GET",
       
       headers: {
@@ -275,7 +275,7 @@ onSet=(var1)=>{
 
     
      console.log("fetching data")
-     fetch(`http://${BaseUrl.wifi}:3000/api/v1/ongoingOrder/`, {
+     fetch(`${BaseUrl.wifi}/api/v1/ongoingOrder/`, {
       method: "POST",
       body: JSON.stringify(user),
       headers: {

@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const server=require("http").createServer(app);
 const io=require("socket.io")(server);
-server.listen(3000, "192.168.98.129");
+server.listen(3000, "192.168.1.103");
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -33,7 +33,7 @@ const cancelledOrderRoutes = require('./routes/cancelledOrder');
 const acceptedOrderRoutes = require('./routes/acceptedOrder');
 const addressRoutes = require('./routes/address');
 const ordersRoutes = require('./routes/orders');
-
+const receiptRoutes = require('./routes/receipt');
 const ongoingOrderRoutes = require('./routes/ongoingOrder');
 const upcomingOrderRoutes = require('./routes/upcomingOrder');
 const SubCategoryRoutes = require('./routes/SubCategory');
@@ -59,6 +59,7 @@ app.use(`${api}/ongoingOrder`, ongoingOrderRoutes);
 app.use(`${api}/upcomingOrder`, upcomingOrderRoutes);
 app.use(`${api}/SubCategory`, SubCategoryRoutes);
 app.use(`${api}/complaint`, complaintRoutes);
+
 
 
 /*

@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import { BaseUrl } from "../Constants/baseUrl.js";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -34,9 +34,43 @@ import {
 } from 'native-base';
 import {RFPercentage, RFValue} from 'react-native-responsive-fontsize';
 
+
 function VendorProfile({route,navigation}) {
+  const[sentiment,setSentiment]=useState('');
   const {item}=route.params;
   console.log("vendor data is ",item);
+useEffect(()=>{
+  console.log("heloo endor is here")
+  getSubCategory1()
+
+},[])
+  const getSubCategory1=()=>{
+    const id=item.id;
+    const user={
+      id
+      
+
+    }
+    console.log("result", id);
+    fetch(`${BaseUrl.wifi}/api/v1/review/getOverview`,{
+      method:"POST",
+      body: JSON.stringify(user),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+      },
+  }) .then((res) => res.json())
+  .then((data) => {
+    console.log("data is",data)
+    setSentiment(data.sentiment)
+    
+  })
+ 
+  .catch(error => {
+      //console.error(error);
+    });
+  }
+
   return (
     <>
       <StatusBar backgroundColor="#0183A8" />
@@ -199,7 +233,7 @@ function VendorProfile({route,navigation}) {
              
                 
               }}>
-              <View style={{flexDirection: 'row'}}>
+              {/* <View style={{flexDirection: 'row'}}>
                 <Ionicons
                   name="star"
                   size={wp(4)}
@@ -240,7 +274,22 @@ function VendorProfile({route,navigation}) {
                     margin: wp(0.4),
                   }}
                 />
+              </View> */}
+               <TouchableOpacity  onPress={() => navigation.navigate('Reviews',{item:item,info:'vendorProfile'})}>
+            <View style={{marginTop: hp(0.2)}}>
+
+                <Text
+                  style={{
+                    color: '#fff',
+                    paddingHorizontal: wp(0.8),
+                    textDecorationLine: 'underline',
+                    fontSize: RFValue(10, 580),
+                  }}>
+                  Overall Feedback : {sentiment}
+                </Text>
+                
               </View>
+              </TouchableOpacity>
               <TouchableOpacity  onPress={() => navigation.navigate('Reviews',{item:item,info:'vendorProfile'})}>
             <View style={{marginTop: hp(0.2)}}>
 

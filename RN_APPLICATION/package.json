@@ -4,13 +4,16 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "generatedApk": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/build/intermediates/res/merged/release/ && Remove-Item  android/app/src/main/res/drawable-* -Recurse -Force && Remove-Item  android/app/src/main/res/raw/*  -Recurse -Force && cd android && ./gradlew assembleRelease && cd .."
   },
   "dependencies": {
+    "@expo/react-native-action-sheet": "^3.12.0",
     "@react-native-async-storage/async-storage": "^1.15.4",
     "@react-native-community/geolocation": "^2.0.2",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/slider": "^3.0.3",
+    "@react-native-community/voice": "^1.1.9",
     "@react-native-firebase/app": "^12.7.5",
     "@react-native-firebase/firestore": "^12.7.5",
     "@react-native-firebase/messaging": "^12.7.5",
@@ -34,11 +37,13 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "~0.63.4",
+    "react-native-android-location-enabler": "^1.2.2",
     "react-native-animated-multistep": "^1.1.1",
     "react-native-dropdown-picker": "^5.1.23",
     "react-native-elements": "^3.4.1",
     "react-native-geocoder": "^0.5.0",
     "react-native-gesture-handler": "~1.10.2",
+    "react-native-gifted-chat": "^0.16.3",
     "react-native-keyboard-aware-scroll-view": "^0.9.4",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-maps": "0.27.1",
@@ -70,7 +75,8 @@
     "styled-system": "^5.1.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0"
+    "@babel/core": "^7.9.0",
+    "eslint-plugin-react-hooks": "^4.3.0"
   },
   "private": true,
   "name": "rozgar - Copy",

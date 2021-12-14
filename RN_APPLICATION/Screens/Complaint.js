@@ -167,7 +167,7 @@ import { BaseUrl } from "../Constants/baseUrl.js";
   
       
        console.log("fetching data")
-       fetch(`http://${BaseUrl.wifi}:3000/api/v1/complaint/`, {
+       fetch(`${BaseUrl.wifi}/api/v1/complaint/`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {

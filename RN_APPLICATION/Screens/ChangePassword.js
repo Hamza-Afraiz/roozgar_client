@@ -60,7 +60,7 @@ function ChangePassword({ route,navigation }) {
       if (newPassword.localeCompare(confirmNewPassword) === 0) {
         setIsLoading(true);
         console.log('Id1 is',Id1);
-        fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/changePassword/?id=${newdata}`, {
+        fetch(`${BaseUrl.wifi}/api/v1/client/changePassword/?id=${newdata}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

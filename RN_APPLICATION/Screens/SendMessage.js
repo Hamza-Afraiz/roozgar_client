@@ -197,7 +197,8 @@ function SendMessage({ navigation }) {
               alignItems: "center",
               paddingVertical: hp(1.5),
               borderRadius: 4,
-              backgroundColor: Colors.primary,
+           //   paddingBottom:hp(20),
+              backgroundColor: Colors.secondary,
             }}
           >
             <Text

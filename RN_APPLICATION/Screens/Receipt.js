@@ -141,7 +141,7 @@ function Receipt({route,navigation}) {
       console.log('review before publishing is',review);
      
         
-        fetch(`http://${BaseUrl.wifi}:3000/api/v1/review/`, {
+        fetch(`${BaseUrl.wifi}/api/v1/review/`, {
             method: "POST",
             body: JSON.stringify(review),
             headers: {
@@ -151,6 +151,10 @@ function Receipt({route,navigation}) {
         })
         .then((res) => res.json())
         .then((data) => {
+          if(data.message=='already reviewed!'){
+            alert("You have already posted a Review.")
+          }
+         
             if (data) {
               
             
@@ -165,8 +169,8 @@ function Receipt({route,navigation}) {
             }
         })
         .catch((err) => {
-           alert("incorrect details.Check your details again")
-           console.log(err)
+           alert("Your Review cant be posted.Maybe you have Already reviewed this service,or you have used offencive words now")
+          // console.log(err)
         
             
         });

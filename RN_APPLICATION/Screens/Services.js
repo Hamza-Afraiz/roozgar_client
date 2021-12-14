@@ -45,6 +45,7 @@ import {connect} from 'react-redux'
       "hardwareBackPress",
       this.backAction
     );*/
+    const id=props.route.params.categoryId;
     getCategory();
     const someData = this.props.data;
     console.log("redux data ia",someData)

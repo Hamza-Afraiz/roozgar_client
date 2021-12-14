@@ -4,11 +4,17 @@ import Toast from 'react-native-toast-message';
 import {useSelector,useDispatch} from 'react-redux'
 import { BaseUrl } from "../../Constants/baseUrl.js";
 export const SET_CURRENT_USER = "SET_CURRENT_USER";
-
+export const loggedinUser = (user,token, dispatch) => {
+    var temp={user: user , token: token}
+    console.log("username:"+user)
+    const api = process.env.BASE_URL2;
+    const decoded = jwt_decode(token)
+    dispatch(setCurrentUser(decoded, temp))
+};
 export const loginUser = (user, dispatch) => {
     console.log("username:"+user.userName)
     const api = process.env.BASE_URL2;
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/login`, {
+    fetch(`${BaseUrl.wifi}/api/v1/client/login`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
@@ -71,7 +77,7 @@ const storeData = async (value) => {
   }
 export const registerUser = (user, dispatch) => {
    console.log("username:"+user)
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/register`, {
+    fetch(`${BaseUrl.wifi}/api/v1/client/register`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
@@ -103,7 +109,7 @@ export const registerUser = (user, dispatch) => {
 };
 export const getCategory = () => {
     const dispatch  = useDispatch()
-     fetch(`http://${BaseUrl.wifi}:3000/api/v1/category/`, {
+     fetch(`${BaseUrl.wifi}/api/v1/category/`, {
          method: "GET",
          
          headers: {
@@ -138,7 +144,7 @@ export const getCategory = () => {
     const dispatch  = useDispatch()
           console.log(id)
           const req=
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/service/?id=${id}` ,{
+    fetch(`${BaseUrl.wifi}/api/v1/service/?id=${id}` ,{
         method: "GET",
         
         headers: {
@@ -169,6 +175,7 @@ export const getCategory = () => {
 };
 
 export const getUserProfile = (id) => {
+    console.log("getUserProfile")
     fetch(`${baseURL}users/${id}`, {
         method: "GET",
         body: JSON.stringify(user),
@@ -182,6 +189,7 @@ export const getUserProfile = (id) => {
 }
 
 export const logoutUser = (dispatch) => {
+    console.log("logoutiing user")
     AsyncStorage.removeItem("jwt");
     console.log("async removeddddddddddd");
     dispatch(setCurrentUser({}))

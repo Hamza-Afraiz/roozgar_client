@@ -99,7 +99,7 @@ const users = [
           })
       
       
-      fetch(`http://${BaseUrl.wifi}:3000/api/v1/service/` ,{
+      fetch(`${BaseUrl.wifi}/api/v1/service/` ,{
         method: "GET",
         
         headers: {
@@ -139,7 +139,7 @@ const users = [
       this.setState({categoryId:id})
       
        console.log("fetching data from subcategory",id)
-      fetch(`http://${BaseUrl.wifi}:3000/api/v1/service/subCategory?id=${id}` ,{
+      fetch(`${BaseUrl.wifi}/api/v1/service/subCategory?id=${id}` ,{
         method: "GET",
         
         headers: {
@@ -409,7 +409,13 @@ setHighPriceFilter=(value)=>{
             
          
         </View>
-       {(this.state.services.length)==0? <View style={{marginTop:'50%',marginBottom:'50%',alignSelf:'center'}}>
+      
+        
+         
+          
+      
+         </TouchableOpacity>
+         {(this.state.services.length)==0? <View style={{marginTop:'50%',marginBottom:'50%',alignSelf:'center'}}>
             <Text style={{color:Colors.secondary,fontSize:22,fontWeight:'bold',alignSelf:'center'}}>
               Really sorry for inconvenience..
             </Text>
@@ -417,11 +423,6 @@ setHighPriceFilter=(value)=>{
               No Online services for this subcategory.
             </Text>
           </View>:null}
-        
-         
-          
-      
-         </TouchableOpacity>
           <Divider orientation="vertical" width={5} />
         
      

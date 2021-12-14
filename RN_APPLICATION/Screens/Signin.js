@@ -1,5 +1,5 @@
 import React  ,{useContext,useState,useEffect} from 'react';
-import { StyleSheet, Text,Image, View,TextInput,TouchableOpacity, Alert,Modal,Pressable} from 'react-native';
+import { StyleSheet, Text,Image,ActivityIndicator, View,TextInput,TouchableOpacity, Alert,Modal,Pressable} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {Colors} from "../Constants/Colors.js";
 import { useIsFocused } from '@react-navigation/native';
@@ -27,213 +27,219 @@ const Signin = (props,{navigation}) => {
   const isFocused = useIsFocused();
   const [modalVisible, setModalVisible] = React.useState(false);
   const[checkNumber, setCheckNumber] = React.useState("");
+  const [var1,setVar1] = useState("0");
+  const [var2,setVar2] = useState("0");
   const[text1,setText1] = React.useState("PLEASE COOPERATE WITH US TO HELP YOU");
-  const setArrived=()=>{
+//   const setArrived=()=>{
+//     console.log(" set    arrived");
     
-    dispatch({type:"ADD_ARRIVEDDATA",payload:"arrived"})
-}
-   const data3 =  useSelector((state)=>{
-     console.log("workking nowww")
+//     dispatch({type:"ADD_ARRIVEDDATA",payload:"arrived"})
+// }
+//    const data3 =  useSelector((state)=>{
+//      console.log("workking nowww")
 
   
-    return state.intervalData
-  })
+//     return state.intervalData
+//   })
   useEffect(() => {
-    const socket=io(`http://${BaseUrl.wifi}:3000`);
+   // const socket=io(`${BaseUrl.wifi}`);
     console.log("stateusr is ",context.stateUser.userProfile
     )
    
     console.log("authentication is  ",context.stateUser.isAuthenticated
     )
-    Toast.show({
-      text1: 'Hello',
-      text2: 'Wellcome Back Dear Client 👋'
-    });
+    // Toast.show({
+    //   text1: 'Hello',
+    //   text2: 'Wellcome Back Dear Client 👋'
+    // });
     if (context.stateUser.isAuthenticated === true) {
-      props.navigation.navigate("Home");
+      props.navigation.replace("Home");
     }
-    messaging().onNotificationOpenedApp(remoteMessage => {
-      console.log(
-        'Notification caused app to open from background state in gardener:',
-        remoteMessage.notification,
-      );
-      console.log(remoteMessage.data.vendorToken);
-      if(remoteMessage.data.accepted == "accepted") {
+  //   messaging().onNotificationOpenedApp(remoteMessage => {
+  //     console.log(
+  //       'Notification caused app to open from background state in gardener:',
+  //       remoteMessage.notification,
+  //     );
+  //     console.log(remoteMessage.data.vendorToken);
+  //     if(remoteMessage.data.accepted == "accepted") {
      
         
        
-        props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId,info:'accepted',orderId:remoteMessage.data.orderId})
+  //       props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId,info:'accepted',orderId:remoteMessage.data.orderId})
      
       
          
       
     
-     }
-     if(remoteMessage.data.accepted == "arrived") {
+  //    }
+  //    if(remoteMessage.data.accepted == "arrived") {
     
        
-      setArrived()
-      alert('Your vendor has arrived at your doorstep.Please check or contact vendor')
+  //     setArrived()
+  //     alert('Your vendor has arrived at your doorstep.Please check or contact vendor')
      
         
      
    
-    }
-     if(remoteMessage.data.accepted == "rejected") {
-       // props.navigation.reset({
-       //   index: 0,
-       //   routes: [
-       //     {
-       //       name: 'Categories',
+  //   }
+  //    if(remoteMessage.data.accepted == "rejected") {
+  //      // props.navigation.reset({
+  //      //   index: 0,
+  //      //   routes: [
+  //      //     {
+  //      //       name: 'Categories',
             
-       //     },
-       //   ],
-       //   params:{
-       //     info:'cancel'
-       //   }
-       // });
-       props.navigation.navigate("Categories",{info:'cancel'})
+  //      //     },
+  //      //   ],
+  //      //   params:{
+  //      //     info:'cancel'
+  //      //   }
+  //      // });
+  //      props.navigation.navigate("Categories",{info:'cancel'})
             
         
       
-       }
-      if(remoteMessage.data.accepted == "completed") {
+  //      }
+  //     if(remoteMessage.data.accepted == "completed") {
     
-       fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/getReceipt/?id=${remoteMessage.data.receiptId}` ,{
-         method: "GET",
+  //      fetch(`${BaseUrl.wifi}/api/v1/client/getReceipt/?id=${remoteMessage.data.receiptId}` ,{
+  //        method: "GET",
          
-         headers: {
-             Accept: "application/json",
-             "Content-Type": "application/json",
-         },
-     })
-     .then((res) => res.json())
-     .then((data) => {
-         if (data) {
+  //        headers: {
+  //            Accept: "application/json",
+  //            "Content-Type": "application/json",
+  //        },
+  //    })
+  //    .then((res) => res.json())
+  //    .then((data) => {
+  //        if (data) {
             
-             const item=data;
-             console.log("receipt id  data in signinnnnnnnnnnnnnnnnnnn is ",item)
-             props.navigation.navigate("Receipt",{item:item})
+  //            const item=data;
+  //            console.log("receipt id  data in signinnnnnnnnnnnnnnnnnnn is ",item)
+  //            props.navigation.navigate("Receipt",{item:item})
 
             
-            // this.getCurrentLocation();
+  //           // this.getCurrentLocation();
    
          
-             //const value=AsyncStorage.getItem('jwt')
-            //console.log("token value is ",value)
+  //            //const value=AsyncStorage.getItem('jwt')
+  //           //console.log("token value is ",value)
             
    
-         }
-     })
-     .catch((err) => {
-        alert("incorrect details.Check your details again")
-        console.log(err)
+  //        }
+  //    })
+  //    .catch((err) => {
+  //       alert("incorrect details.Check your details again")
+  //       console.log(err)
      
          
-     });
+  //    });
          
        
       
-   }
-    });
+  //  }
+  //   });
     
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      console.log("remote msg is",remoteMessage)
-      if(remoteMessage.data.accepted == "accepted") {
+  //   const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+  //     console.log("remote msg is",remoteMessage)
+  //     if(remoteMessage.data.accepted == "accepted") {
      
         
        
-         props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId,info:'accepted',orderId:remoteMessage.data.orderId})
+  //        props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId,info:'accepted',orderId:remoteMessage.data.orderId})
       
        
           
        
      
-      }
-      if(remoteMessage.data.accepted == "arrived") {
+  //     }
+  //     if(remoteMessage.data.accepted == "arrived") {
      
         
-       setArrived()
-       alert('Your vendor has arrived at your doorstep.Please check or contact vendor')
+  //      setArrived()
+  //      alert('Your vendor has arrived at your doorstep.Please check or contact vendor')
       
          
       
     
-     }
-      if(remoteMessage.data.accepted == "rejected") {
-        // props.navigation.reset({
-        //   index: 0,
-        //   routes: [
-        //     {
-        //       name: 'Categories',
+  //    }
+  //     if(remoteMessage.data.accepted == "rejected") {
+  //       // props.navigation.reset({
+  //       //   index: 0,
+  //       //   routes: [
+  //       //     {
+  //       //       name: 'Categories',
              
-        //     },
-        //   ],
-        //   params:{
-        //     info:'cancel'
-        //   }
-        // });
-        props.navigation.navigate("Categories",{info:'cancel'})
+  //       //     },
+  //       //   ],
+  //       //   params:{
+  //       //     info:'cancel'
+  //       //   }
+  //       // });
+  //       props.navigation.navigate("Categories",{info:'cancel'})
              
          
        
-        }
-       if(remoteMessage.data.accepted == "completed") {
+  //       }
+  //      if(remoteMessage.data.accepted == "completed") {
      
-        fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/getReceipt/?id=${remoteMessage.data.receiptId}` ,{
-          method: "GET",
+  //       fetch(`${BaseUrl.wifi}/api/v1/client/getReceipt/?id=${remoteMessage.data.receiptId}` ,{
+  //         method: "GET",
           
-          headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-          },
-      })
-      .then((res) => res.json())
-      .then((data) => {
-          if (data) {
+  //         headers: {
+  //             Accept: "application/json",
+  //             "Content-Type": "application/json",
+  //         },
+  //     })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //         if (data) {
              
-              const item=data;
-              console.log("receipt id  data in signinnnnnnnnnnnnnnnnnnn is ",item)
-              props.navigation.navigate("Receipt",{item:item})
+  //             const item=data;
+  //             console.log("receipt id  data in signinnnnnnnnnnnnnnnnnnn is ",item)
+  //             props.navigation.navigate("Receipt",{item:item})
 
              
-             // this.getCurrentLocation();
+  //            // this.getCurrentLocation();
     
           
-              //const value=AsyncStorage.getItem('jwt')
-             //console.log("token value is ",value)
+  //             //const value=AsyncStorage.getItem('jwt')
+  //            //console.log("token value is ",value)
              
     
-          }
-      })
-      .catch((err) => {
-         alert("incorrect details.Check your details again")
-         console.log(err)
+  //         }
+  //     })
+  //     .catch((err) => {
+  //        alert("incorrect details.Check your details again")
+  //        console.log(err)
       
           
-      });
+  //     });
           
         
        
-    }
+  //   }
       
        
-     /* Alert.alert("A new request has arrived!", "What to do?", [
-        {
-          text: "Reject",
-          onPress: () => {props.navigation.navigate("Categories")},
-          style: "cancel",
-        },
-        {
-          text: "Accept",
-          onPress: () => {props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId});},
-        },
-      ]);*/
-    });
-    return unsubscribe;
-  }, [context.stateUser.isAuthenticated,isFocused]);
+  //    /* Alert.alert("A new request has arrived!", "What to do?", [
+  //       {
+  //         text: "Reject",
+  //         onPress: () => {props.navigation.navigate("Categories")},
+  //         style: "cancel",
+  //       },
+  //       {
+  //         text: "Accept",
+  //         onPress: () => {props.navigation.navigate("Maps2",{vendorId:remoteMessage.data.vendorId});},
+  //       },
+  //     ]);*/
+  //   });
+  //   return unsubscribe;
+  
+  }, [context.stateUser.isAuthenticated]);
 
   const handleSubmit = () => {
+   
+    setVar1("1");
     console.log('handle submit')
     const user = {
       phoneNumber,
@@ -243,14 +249,16 @@ const Signin = (props,{navigation}) => {
     if (phoneNumber === "" || password === "") {
       setError("Please fill in your credentials");
     } else {
+      
       loginUser(user, context.dispatch);
     }
   };
   const handleForget=() => {
+    setVar2('1');
     const user={
       checkNumber
     }
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/client/checkPhoneNumber`, {
+    fetch(`${BaseUrl.wifi}/api/v1/client/checkPhoneNumber`, {
         method: "POST",
         body: JSON.stringify(user),
         headers: {
@@ -262,9 +270,18 @@ const Signin = (props,{navigation}) => {
     .then((data) => {
         if (data) {
           console.log("user data is ",data)
-          console.log("phone number exist")
-          props.navigation.navigate('ForgetOtp',{item:checkNumber,id:data.id})
-          setModalVisible(!modalVisible)
+          if(data.user == 'false'){
+            console.log("phone number not exist")
+          setText1("PHONE NUMBER NOT FOUND !")
+          setVar2('0')
+          }
+          else{
+            console.log("phone number exist")
+            props.navigation.navigate('ForgetOtp',{item:checkNumber,id:data.data.id})
+            setModalVisible(!modalVisible)
+            setVar2('0')
+          }
+          
           
            
 
@@ -274,6 +291,7 @@ const Signin = (props,{navigation}) => {
     .catch((err) => {
       console.log("phone number not exist")
       setText1("PHONE NUMBER NOT FOUND !")
+      setVar2('0')
       
       console.log(err)
        
@@ -282,7 +300,10 @@ const Signin = (props,{navigation}) => {
   }
     return (
       <View style={[styles.container,{}]}>
+      
+        
         <View >
+      
         <Image
              style={styles.userImage}
               source={logo}
@@ -290,7 +311,7 @@ const Signin = (props,{navigation}) => {
         </View>
        
         
-        <Toast ref={(ref) => Toast.setRef(ref)} />
+        {/* <Toast ref={(ref) => Toast.setRef(ref)} /> */}
        
         
         <View style={{backgroundColor:Colors.bigcard,elevation:2,margin:5,width:'95%',display:'flex',flexDirection:'row',borderRadius:10}} >
@@ -329,13 +350,19 @@ const Signin = (props,{navigation}) => {
         <Text style={{marginTop:20}}>
           {text1}
           </Text>
-    
+          {(var2 == '1')? <View style={{alignSelf:'center',marginTop:'20%',flex:1}}>
+                
+                <ActivityIndicator size="large" color="#00ff00" />
+               
+                        
+                       
+               </View>:
             <Pressable
               style={[styles.button, styles.buttonClose,{marginTop:"10%"}]}
               onPress={handleForget}
             >
               <Text style={styles.textStyle}>Send Code</Text>
-            </Pressable>
+            </Pressable>}
             <Pressable
               style={[styles.button,{marginTop:hp(1),marginTop:"10%"}]}
               onPress={() => setModalVisible(!modalVisible)}
@@ -387,13 +414,20 @@ const Signin = (props,{navigation}) => {
         <TouchableOpacity>
           <Text style={styles.forgot}>Forgot Password?</Text>
         </TouchableOpacity>
+        {(var1 == '1')? <View style={{alignSelf:'center',marginTop:'10%',flex:1}}>
+                
+                <ActivityIndicator size="large" color="#00ff00" />
+               
+                        
+                       
+               </View>:
       
         <TouchableOpacity style={[styles.loginBtn,{elevation:10}]}
          onPress={handleSubmit}
         >
           <Text style={styles.loginText}>LOGIN</Text>
          
-        </TouchableOpacity >
+        </TouchableOpacity >}
         <TouchableOpacity
          onPress={()=> props.navigation.navigate('SignUp3')}
          >

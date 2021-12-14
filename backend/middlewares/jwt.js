@@ -15,6 +15,8 @@ function authJwt() {
             `${api}/client/sendOTP`,
             `${api}/client/checkPhoneNumber`,
             `${api}/client/changePassword/`,
+            `${api}/client/getReceipt/`,
+            `${api}/client/getReceiptByAppoitmentId/`,
             `${api}/client/changePassword2/`,
             `${api}/category/`,
             `${api}/service/`,
@@ -23,10 +25,12 @@ function authJwt() {
             `${api}/review/`,
             `${api}/ongoingOrder/`,
             `${api}/ongoingOrder/delete/`,
+            `${api}/ongoingOrder/delete1/`,
             `${api}/ongoingOrder/appoitmentId/`,
             `${api}/acceptedOrder/`,
             `${api}/acceptedOrder/appoitmentId/`,
-           
+            `${api}/cancelledOrder/cancelOrder/`,
+            `${api}/cancelledOrder/`,
             `${api}/service/vendorId`,
             `${api}/service/subCategory`,
             `${api}/upcomingOrder/`,
@@ -34,6 +38,7 @@ function authJwt() {
             `${api}/SubCategory/`,
             `${api}/complaint/`,
             `${api}/complaint/notAnswered/`,
+            `${api}/receipt/`,
 
             
         ]

@@ -147,10 +147,12 @@ import { marginRight } from "styled-system";
       const someData = this.props.someData;
      // const servicesData=this.props.servicesData;
       console.log("garrrrdenerrr is",someData);
+      const id=this.props.route.params.categoryId;
+      console.log("garrrrdenerrr idddddddis",id);
       //console.log("services data from redux is",servicesData)
-      this.setState({categoryIdNew:someData})
-      this.getService(someData);
-      this.getSubCategoryById(someData);
+      this.setState({categoryIdNew:id})
+      this.getService(id);
+      this.getSubCategoryById(id);
      
       
     //this.storage()
@@ -169,7 +171,7 @@ import { marginRight } from "styled-system";
     
         console.log("fetchingggggggggggggg categories from ")
        
-      fetch(`http://${BaseUrl.wifi}:3000/api/v1/SubCategory/` ,{
+      fetch(`${BaseUrl.wifi}/api/v1/SubCategory/` ,{
       method: "GET",
       
       headers: {
@@ -251,7 +253,7 @@ import { marginRight } from "styled-system";
     
     console.log("fetchingggggggggggggg subCategirues from ",id)
    
-fetch(`http://${BaseUrl.wifi}:3000/api/v1/SubCategory/?id=${id}` ,{
+fetch(`${BaseUrl.wifi}/api/v1/SubCategory/?id=${id}` ,{
   method: "GET",
   
   headers: {
@@ -289,7 +291,7 @@ fetch(`http://${BaseUrl.wifi}:3000/api/v1/SubCategory/?id=${id}` ,{
     
           console.log("fetchingggggggggggggg services from ",id)
          
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/service/?id=${id}` ,{
+    fetch(`${BaseUrl.wifi}/api/v1/service/?id=${id}` ,{
         method: "GET",
         
         headers: {
@@ -327,7 +329,7 @@ getService = () => {
     
   console.log("fetchingggggggggggggg services from ",)
  
-fetch(`http://${BaseUrl.wifi}:3000/api/v1/service/` ,{
+fetch(`${BaseUrl.wifi}/api/v1/service/` ,{
 method: "GET",
 
 headers: {

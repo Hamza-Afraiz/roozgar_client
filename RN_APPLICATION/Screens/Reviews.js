@@ -99,7 +99,7 @@ function Reviews({route,navigation}) {
       id1=item.vendorId;
       console.log('servicesbycategry boltay from',id1)
     }
-    fetch(`http://${BaseUrl.wifi}:3000/api/v1/review/?id=${id1}` ,{
+    fetch(`${BaseUrl.wifi}/api/v1/review/?id=${id1}` ,{
         method: "GET",
         
         headers: {
@@ -141,7 +141,7 @@ console.log("average rating is",sumHeight/count)
        
     });
       
-   /* fetch(`http://${BaseUrl.wifi}:3000/api/v1/review/` ,{
+   /* fetch(`${BaseUrl.wifi}/api/v1/review/` ,{
       method: "GET",
       
       headers: {

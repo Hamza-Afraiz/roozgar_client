@@ -91,7 +91,7 @@ const users = [
       const id =this.props.route.params.item.id;
       
        console.log("fetching data from",id)
-      fetch(`http://${BaseUrl.wifi}:3000/api/v1/service/vendorId?id=${id}` ,{
+      fetch(`${BaseUrl.wifi}/api/v1/service/vendorId?id=${id}` ,{
         method: "GET",
         
         headers: {
